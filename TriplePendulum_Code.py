@@ -191,5 +191,6 @@ def make_plot(x, y):
         for i in range(x.shape[1] - 1):
             ax.plot(column(x, i+1), column(y, i+1))
 
-
     plt.show()
+
+    return fig
