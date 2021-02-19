@@ -210,9 +210,6 @@ def animate_pendulum(n, times, initial_positions, initial_velocities, lengths, m
     ax.axes.xaxis.set_ticks([])
     ax.axes.yaxis.set_ticks([])
 
-    ax.set_xlabel('x axis')
-    ax.set_ylabel('y axis')
-
     ax.set(xlim=(-1, 1), ylim=(-1, 1))
 
     line, = ax.plot([], [], 'o-', lw=2)
