@@ -13,6 +13,7 @@ from scipy.integrate import odeint
 from IPython.display import HTML
 
 
+
 # n -> number of segments
 # times -> time instants for the integration of the system
 # initial_positions -> initial positions of all (or each, if list) segments IN DEGREES
@@ -131,6 +132,7 @@ def integrate_pendulum(n, times, initial_positions=135, initial_velocities=0, le
     return odeint(gradient, y0, times, args=(parameter_vals,))
 
 
+
 def get_xy_coords(p, lengths=None):
     """Get (x, y) coordinates from generalized coordinates"""
 
@@ -156,37 +158,49 @@ def get_xy_coords(p, lengths=None):
     return np.cumsum(x, 1), np.cumsum(y, 1)
 
 
+
 def make_plot(x, y):
     """Make the plot of trajectories"""
 
+    # Make figure and axes
     fig = plt.figure( figsize=(6, 6) )
     ax = fig.add_subplot(1, 1, 1)
 
+    # Make ticks invisible
     ax.axes.xaxis.set_ticks([])
     ax.axes.yaxis.set_ticks([])
 
+    # Set axis labels
     ax.set_xlabel('x axis')
     ax.set_ylabel('y axis')
 
+    # Set axis limits
     ax.set(xlim=(-1, 1), ylim=(-1, 1))
 
+    # Function which selects columns of a matrix
     def column(matrix, i):
         return [row[i] for row in matrix]
 
+    # Here we make some special cases plots with customized line colors
+    # if n = 1
     if x.shape[1] == 2:
         ax.plot( column(x, 1), column(y, 1), color='#047fff' )
+    # if n = 2
     elif x.shape[1] == 3:
         ax.plot( column(x, 1), column(y, 1), color='#047fff' )
         ax.plot( column(x, 2), column(y, 2), color='#ff8404' )
+    # if n = 3
     elif x.shape[1] == 4:
         ax.plot( column(x, 1), column(y, 1), color='#047fff' )
         ax.plot( column(x, 2), column(y, 2), color='#ff8404' )
         ax.plot( column(x, 3), column(y, 3), color='#00C415' )
+    # if n = 4
     elif x.shape[1] == 5:
         ax.plot( column(x, 1), column(y, 1), color='#047fff' )
         ax.plot( column(x, 2), column(y, 2), color='#ff8404' )
         ax.plot( column(x, 3), column(y, 3), color='#00C415' )
         ax.plot( column(x, 4), column(y, 4), color='#ff047f' )
+    # if n is greater than 4
     else:
         for i in range(x.shape[1] - 1):
             ax.plot(column(x, i+1), column(y, i+1))
@@ -197,91 +211,80 @@ def make_plot(x, y):
 
 
 
-
-def animate_pendulum(n, times, initial_positions, initial_velocities, lengths, masses):
-    """Make the pendulum animation"""
-
-    p = integrate_pendulum(n, times, initial_positions, initial_velocities, lengths, masses)
-    x, y = get_xy_coords(p)
-    
-    fig = plt.figure( figsize=(6, 6) )
-    ax = fig.add_subplot(1, 1, 1)
-
-    ax.axes.xaxis.set_ticks([])
-    ax.axes.yaxis.set_ticks([])
-
-    ax.set(xlim=(-1, 1), ylim=(-1, 1))
-
-    line, = ax.plot([], [], 'o-', lw=2)
-
-    def init():
-        line.set_data([], [])
-        return line,
-
-    def animate(i):
-        line.set_data(x[i], y[i])
-        return line,
-
-    anim = animation.FuncAnimation(fig, animate, frames=len(times),
-                                   interval=1000 * times.max() / len(times),
-                                   blit=True, init_func=init)
-    plt.close(fig)
-    return anim
-
-
-
-
 def animate_pendulums(n, times, initial_positions, initial_velocities, lengths, masses, n_pendulums=1, perturbation=0, track_length=15):
-    oversample = 3
-    track_length *= oversample
+    """Make the animation of 'n_pendulums' pendulums"""
+
+    const = 3
+    track_length *= const
     
-    t = np.linspace(0, 10, oversample * 200)
+    # Store the coordinates of motions of all pendulums
     p = [integrate_pendulum(n=n, times=times, 
                             initial_positions=initial_positions + i * perturbation / n_pendulums, 
                             initial_velocities=initial_velocities, lengths=lengths, masses=masses)
          for i in range(n_pendulums)]
 
+    # Store the (x, y) coordinates of all pendulums
     positions = np.array([get_xy_coords(pi) for pi in p])
+
+    # Transpose the array (change ordering!)
     positions = positions.transpose(0, 2, 3, 1)
     # positions is a 4D array: (npendulums, len(t), n+1, xy)
     
+    # Make figure and axes
     fig = plt.figure( figsize=(6, 6) )
     ax = fig.add_subplot(1, 1, 1)
 
+    # Make ticks invisible
     ax.axes.xaxis.set_ticks([])
     ax.axes.yaxis.set_ticks([])
 
+    # Set axis limits
     ax.set(xlim=(-1, 1), ylim=(-1, 1))
     
+    # Make tracks
     track_segments = np.zeros((n_pendulums, 0, 2))
     tracks = collections.LineCollection(track_segments, cmap='gist_rainbow')
     tracks.set_array(np.linspace(0, 1, n_pendulums))
     ax.add_collection(tracks)
     
+    # Make mass points
     points, = plt.plot([], [], 'ok')
     
+    # Make pendulum segments
     pendulum_segments = np.zeros((n_pendulums, 0, 2))
     pendulums = collections.LineCollection(pendulum_segments, colors='black')
     ax.add_collection(pendulums)
 
+    # Initial config of the animation
     def init():
+        # Set everything to zero
         pendulums.set_segments(np.zeros((n_pendulums, 0, 2)))
         tracks.set_segments(np.zeros((n_pendulums, 0, 2)))
         points.set_data([], [])
         return pendulums, tracks, points
 
+    # Animation
     def animate(i):
-        i = i * oversample
+        i = i * const
+
+        # Set segments position by indexing to the (x, y) coordinates
         pendulums.set_segments(positions[:, i])
+
+        # Animate the tracks by "going back in time" by a value of 'track_lenght'
         sl = slice(max(0, i - track_length), i)
         tracks.set_segments(positions[:, sl, -1])
+
+        # Extract explicitly the (x, y) coordinates to set mass point positions
         x, y = positions[:, i].reshape(-1, 2).T
         points.set_data(x, y)
+
         return pendulums, tracks, points
 
-    interval = 1000 * oversample * t.max() / len(t)
-    anim = animation.FuncAnimation(fig, animate, frames=len(times) // oversample,
-                                   interval=interval,
-                                   blit=True, init_func=init)
+    # Set the time interval of the animation
+    interval = 1000 * const * times.max() / len(times)
+
+    # Make the animation
+    anim = animation.FuncAnimation(fig, animate, frames=len(times) // const,interval=interval, blit=True, init_func=init)
+    
     plt.close(fig)
     return anim
