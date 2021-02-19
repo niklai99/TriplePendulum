@@ -194,3 +194,39 @@ def make_plot(x, y):
     plt.show()
 
     return fig
+
+
+
+
+def animate_pendulum(n, times, initial_positions, initial_velocities, lengths, masses):
+    """Make the pendulum animation"""
+
+    p = integrate_pendulum(n, times, initial_positions, initial_velocities, lengths, masses)
+    x, y = get_xy_coords(p)
+    
+    fig = plt.figure( figsize=(6, 6) )
+    ax = fig.add_subplot(1, 1, 1)
+
+    ax.axes.xaxis.set_ticks([])
+    ax.axes.yaxis.set_ticks([])
+
+    ax.set_xlabel('x axis')
+    ax.set_ylabel('y axis')
+
+    ax.set(xlim=(-1, 1), ylim=(-1, 1))
+
+    line, = ax.plot([], [], 'o-', lw=2)
+
+    def init():
+        line.set_data([], [])
+        return line,
+
+    def animate(i):
+        line.set_data(x[i], y[i])
+        return line,
+
+    anim = animation.FuncAnimation(fig, animate, frames=len(times),
+                                   interval=1000 * times.max() / len(times),
+                                   blit=True, init_func=init)
+    plt.close(fig)
+    return anim
