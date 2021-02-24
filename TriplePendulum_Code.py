@@ -4,9 +4,12 @@ from matplotlib import collections
 
 import numpy as np
 
+from sympy import *
+import sympy as sp
 from sympy import symbols
 from sympy.physics import mechanics
 from sympy import Dummy, lambdify
+from sympy import Derivative
 
 from scipy.integrate import odeint
 
@@ -29,14 +32,14 @@ def integrate_pendulum(n, times, initial_positions=135, initial_velocities=0, le
     # Generalized coordinates and velocities
     # (angular positions & velocities of each mass) 
     q = mechanics.dynamicsymbols('q:{0}'.format(n))
-    u = mechanics.dynamicsymbols('u:{0}'.format(n))
+    u = mechanics.dynamicsymbols('q:{0}'.format(n), 1)
 
     # mass and length of each 
     m = symbols('m:{0}'.format(n))
     l = symbols('l:{0}'.format(n))
 
     # gravity and time symbols
-    g, t = symbols('g,t')
+    g, t = symbols('g t')
     
     #--------------------------------------------------
     # INTEGRATION MODEL
@@ -53,16 +56,14 @@ def integrate_pendulum(n, times, initial_positions=135, initial_velocities=0, le
 
     # Create lists to hold particles, forces and kinetic ODEs for each pendulum's segment
     particles = []
-    forces = []
-    kinetic_odes = []
 
     # Run through all the segments:
     for i in range(n):
-
         # Create a reference frame following the i^th mass
         # We call the new frames "Ki" (i=1...n)
         # The new frames follow the position of the i^th mass and are rotated around the z axis
         Ki = K.orientnew('K' + str(i), 'Axis', [q[i], K.z])
+
         # Set the angular velocity of the frame Ki with respect to the frame K 
         Ki.set_ang_vel(K, u[i] * K.z)
 
@@ -74,19 +75,20 @@ def integrate_pendulum(n, times, initial_positions=135, initial_velocities=0, le
 
         # Create a new particle of mass m[i] at this point
         Pai = mechanics.Particle('Pa' + str(i), Pi, m[i])
+
+        # Potential energies
+        for j in range(i+1):
+            Pai.potential_energy += -1 * m[i] * g * ( l[j] * sp.cos(q[j]) )
+
         particles.append(Pai)
 
-        # Set forces on every single mass point
-        forces.append((Pi, m[i] * g * K.x))
-
-        # Compute kinematic ODEs
-        kinetic_odes.append(q[i].diff(t) - u[i])
 
         P = Pi
 
-    # Generate equations of motion using Khane's Method
-    KM = mechanics.KanesMethod(K, q_ind=q, u_ind=u, kd_eqs=kinetic_odes)
-    fr, fr_star = KM.kanes_equations(particles, forces)
+    # Generate equations of motion using Lagrange's Method
+    L = mechanics.Lagrangian(K, *particles)
+    LM = mechanics.LagrangesMethod(L, q)
+    eq = LM.form_lagranges_equations()
     
 
     #-----------------------------------------------------
@@ -95,10 +97,11 @@ def integrate_pendulum(n, times, initial_positions=135, initial_velocities=0, le
     # Initial positions and velocities GIVEN IN DEGREES (here converted to radiants)
     y0 = np.deg2rad(np.concatenate([np.broadcast_to(initial_positions, n),
                                     np.broadcast_to(initial_velocities, n)]))
-        
+
     # Create an array of lengths and masses (given as parameter to the function)
     if lengths is None:
         lengths = np.ones(n) / n
+
     lengths = np.broadcast_to(lengths, n)
     masses = np.broadcast_to(masses, n)
 
@@ -106,18 +109,17 @@ def integrate_pendulum(n, times, initial_positions=135, initial_velocities=0, le
     parameters = [g] + list(l) + list(m)
     parameter_vals = [9.81] + list(lengths) + list(masses)
 
-    # Define symbols and dictionary for unknown parameters
+    dq = []
+    for i in range(n):
+        dq.append(q[i].diff(t))
+
+    d = dict(zip(dq, u))
+
     unknowns = [Dummy() for i in q + u]
     unknown_dict = dict(zip(q + u, unknowns))
 
-    # Create dictionary for solved parameters 
-    kds = KM.kindiffdict()
-
-    # Substitute unknown symbols for qdot terms
-    mm_sym = KM.mass_matrix_full.subs(kds).subs(unknown_dict)
-    fo_sym = KM.forcing_full.subs(kds).subs(unknown_dict)
-
-    # Create functions for numerical calculation by merging fixed parameters and unknown parameters
+    mm_sym = LM.mass_matrix_full.subs(d).subs(unknown_dict)
+    fo_sym = LM.forcing_full.subs(d).subs(unknown_dict)
     mm_func = lambdify(unknowns + parameters, mm_sym)
     fo_func = lambdify(unknowns + parameters, fo_sym)
 
