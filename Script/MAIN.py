@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from matplotlib import animation
 
-from simplePendulum import pendoloSemplice
-from doublePendulum import pendoloDoppio
+from simplePendulum import simplePendulum
+from doublePendulum import doublePendulum
 from triplePendulum import pendoloTriplo
 
 
@@ -21,10 +21,10 @@ def main():
 
 
     if mode == 1:
-        pendoloSemplice()
+        simplePendulum()
     
     elif mode == 2:
-        pendoloDoppio()
+        doublePendulum()
 
     elif mode == 3:
         pendoloTriplo()
