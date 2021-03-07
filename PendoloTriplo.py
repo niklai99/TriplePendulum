@@ -1,5 +1,6 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
+from matplotlib import animation
 
 
 def rk4(f, q0, t0, tf, n):
@@ -49,23 +50,76 @@ def pendoloSemplice():
 
     q, t = rk4(motion, q0, t0 , tf , nstep)
 
-
+    h = t[1]-t[0]
     theta1, omega1 = q.T
 
 
-    plt.figure(1)
-    plt.title('Pendulum Motion:')
-    plt.plot(+np.sin(theta1), -np.cos(theta1))
+    x1 = +l1*np.sin(theta1)
+    y1 = -l1*np.cos(theta1)
     
-    plt.figure(2)
-    plt.title('Theta vs Time:')
-    plt.plot(t, theta1)
+    
+    fig1 = plt.figure(figsize=(14, 6))
+    gs = fig1.add_gridspec(5, 9)
 
-    plt.figure(3)
-    plt.title('Omega vs Time:')
-    plt.plot(t, omega1)
+    ax1 = fig1.add_subplot(gs[:, 5:])
+    ax2 = fig1.add_subplot(gs[0:2, :-5])
+    ax3 = fig1.add_subplot(gs[3:5, :-5])
+
+    ax1.set_xlim(-l1, l1)
+    ax1.set_ylim(-l1, l1)
+
+    ax2.set_xlim(0, 10)
+    ax2.set_ylim(-4, 4)
+
+    ax3.set_xlim(0, 10)
+    ax3.set_ylim(-6, 6)
+
+    
+    
+    ax1.set_title('Pendulum trajectory:')
+    ax2.set_title('Theta vs Time:')
+    ax3.set_title('Omega vs Time:')
+
+    ax1.set_xlabel('x axis')
+    ax1.set_ylabel('y axis')
+
+    ax2.set_xlabel('time')
+    ax2.set_ylabel('theta')
+
+    ax3.set_xlabel('time')
+    ax3.set_ylabel('omega')   
+
+    pendulumSegment, = ax1.plot([], [], 'o-', lw=2, color = '#000000')
+    pendulumTrace, = ax1.plot([], [], '-', lw=2, color = '#047FFF')
+    thetaTrace, = ax2.plot([], [], '-', lw=2, color = '#047FFF')
+    omegaTrace, = ax3.plot([], [], '-', lw=2, color = '#047FFF')
+
+    time_template = 'time = %.1fs'
+    time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+
+    
+    def animate(i, x, y, line):
+        line.set_data(x[:i], y[:i])
+        return line,
+    
+    def pendulum(i, x, y, trace, pendulum):
+        segmentX = [0, x[i]]
+        segmentY = [0, y[i]]
+        trace.set_data(x[i-15:i], y[i-15:i])
+        pendulum.set_data(segmentX, segmentY)
+        time_text.set_text(time_template % (i*h))
+        return trace, pendulum, time_text
+
+  
+
+    anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, pendulumTrace, pendulumSegment], interval=h, blit=True)
+
+    anim2 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, theta1, thetaTrace], interval=h, blit=True)
+
+    anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, omega1, omegaTrace], interval=h, blit=True)
 
     plt.show()
+
 
 
 def pendoloDoppio():
@@ -107,24 +161,95 @@ def pendoloDoppio():
 
     q, t = rk4(motion, q0, t0 , tf , nstep)
 
-
+    h = t[1]-t[0]
     t1, o1, t2, o2 = q.T
 
 
-    plt.figure(1)
-    plt.title('Pendulum Motion:')
-    plt.plot(np.sin(t1), -np.cos(t1))
-    plt.plot(np.sin(t1)+np.sin(t2), -np.cos(t1)-np.cos(t2))
+    x1 = +l1*np.sin(t1)
+    y1 = -l1*np.cos(t1)
+    x2 = +l2*np.sin(t2) + x1
+    y2 = -l2*np.cos(t2) + y1
     
-    plt.figure(2)
-    plt.title('Theta vs Time:')
-    plt.plot(t, t1)
-    plt.plot(t, t2)
+    fig1 = plt.figure(figsize=(14, 6))
+    gs = fig1.add_gridspec(5, 9)
 
-    plt.figure(3)
-    plt.title('Omega vs Time:')
-    plt.plot(t, o1)
-    plt.plot(t, o2)
+    ax1 = fig1.add_subplot(gs[:, 5:])
+    ax2 = fig1.add_subplot(gs[0:2, :-5])
+    ax3 = fig1.add_subplot(gs[3:5, :-5])
+
+    ax1.set_xlim(-l1-l2, l1+l2)
+    ax1.set_ylim(-l1-l2, l1+l2)
+
+    ax2.set_xlim(0, 10)
+    ax2.set_ylim(-10, 10)
+
+    ax3.set_xlim(0, 10)
+    ax3.set_ylim(-10, 10)
+
+    
+    
+    ax1.set_title('Pendulum trajectory:')
+    ax2.set_title('Theta vs Time:')
+    ax3.set_title('Omega vs Time:')
+
+    ax1.set_xlabel('x axis')
+    ax1.set_ylabel('y axis')
+
+    ax2.set_xlabel('time')
+    ax2.set_ylabel('theta')
+
+    ax3.set_xlabel('time')
+    ax3.set_ylabel('omega')   
+
+    pendulumSegment, = ax1.plot([], [], 'o-', lw=2, color = '#000000')
+    pendulumTrace1, = ax1.plot([], [], '-', lw=2, color = '#047FFF')
+    pendulumTrace2, = ax1.plot([], [], '-', lw=2, color = '#FF4B00')
+    thetaTrace1, = ax2.plot([], [], '-', lw=2, color = '#047FFF')
+    thetaTrace2, = ax2.plot([], [], '-', lw=2, color = '#FF4B00')
+    omegaTrace1, = ax3.plot([], [], '-', lw=2, color = '#047FFF')
+    omegaTrace2, = ax3.plot([], [], '-', lw=2, color = '#FF4B00')
+
+    time_template = 'time = %.1fs'
+    time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+
+    
+    def animate(i, x1, y1, x2, y2, line1, line2):
+        line1.set_data(x1[:i], y1[:i])
+        line2.set_data(x2[:i], y2[:i])
+        return line1, line2,
+    
+    def pendulum(i, x1, y1, x2, y2, trace1, trace2, pendulum):
+        segmentX = [0, x1[i], x2[i]]
+        segmentY = [0, y1[i], y2[i]]
+        trace1.set_data(x1[i-15:i], y1[i-15:i])
+        trace2.set_data(x2[i-15:i], y2[i-15:i])
+        pendulum.set_data(segmentX, segmentY)
+        time_text.set_text(time_template % (i*h))
+        return trace1, trace2, pendulum, time_text,
+
+  
+
+    anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, x2, y2, pendulumTrace1, pendulumTrace2, pendulumSegment], interval=h, blit=True)
+
+    anim2 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, t, t2, thetaTrace1, thetaTrace2], interval=h, blit=True)
+
+    anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, t, o2, omegaTrace1, omegaTrace2], interval=h, blit=True)
+
+
+    # plt.figure(1)
+    # plt.title('Pendulum Motion:')
+    # plt.plot(np.sin(t1), -np.cos(t1))
+    # plt.plot(np.sin(t1)+np.sin(t2), -np.cos(t1)-np.cos(t2))
+    
+    # plt.figure(2)
+    # plt.title('Theta vs Time:')
+    # plt.plot(t, t1)
+    # plt.plot(t, t2)
+
+    # plt.figure(3)
+    # plt.title('Omega vs Time:')
+    # plt.plot(t, o1)
+    # plt.plot(t, o2)
 
     plt.show()
 
@@ -221,27 +346,102 @@ def pendoloTriplo():
 
     q, t = rk4(motion, q0, t0 , tf , nstep)
 
-
+    h = t[1]-t[0]
     t1, o1, t2, o2, t3, o3 = q.T
 
 
-    plt.figure(1)
-    plt.title('Pendulum Motion:')
-    plt.plot( np.sin(t1), -np.cos(t1) )
-    plt.plot( np.sin(t1) + np.sin(t2), -( np.cos(t1) + np.cos(t2) ) )
-    plt.plot( np.sin(t1) + np.sin(t2) + np.sin(t3), -( np.cos(t1) + np.cos(t2) + np.cos(t3) ) )
+    x1 = +l0*np.sin(t1)
+    y1 = -l0*np.cos(t1)
+    x2 = +l1*np.sin(t2) + x1
+    y2 = -l1*np.cos(t2) + y1
+    x3 = +l2*np.sin(t3) + x2
+    y3 = -l2*np.cos(t3) + y2
     
-    plt.figure(2)
-    plt.title('Theta vs Time:')
-    plt.plot(t, t1)
-    plt.plot(t, t2)
-    plt.plot(t, t3)
+    fig1 = plt.figure(figsize=(14, 6))
+    gs = fig1.add_gridspec(5, 9)
 
-    plt.figure(3)
-    plt.title('Omega vs Time:')
-    plt.plot(t, o1)
-    plt.plot(t, o2)
-    plt.plot(t, o3)
+    ax1 = fig1.add_subplot(gs[:, 5:])
+    ax2 = fig1.add_subplot(gs[0:2, :-5])
+    ax3 = fig1.add_subplot(gs[3:5, :-5])
+
+    ax1.set_xlim(-l0-l1-l2, l0+l1+l2)
+    ax1.set_ylim(-l0-l1-l2, l0+l1+l2)
+
+    ax2.set_xlim(0, 10)
+    ax2.set_ylim(-20, 20)
+
+    ax3.set_xlim(0, 10)
+    ax3.set_ylim(-20, 20)
+
+    
+    
+    ax1.set_title('Pendulum trajectory:')
+    ax2.set_title('Theta vs Time:')
+    ax3.set_title('Omega vs Time:')
+
+    ax1.set_xlabel('x axis')
+    ax1.set_ylabel('y axis')
+
+    ax2.set_xlabel('time')
+    ax2.set_ylabel('theta')
+
+    ax3.set_xlabel('time')
+    ax3.set_ylabel('omega')   
+
+    pendulumSegment, = ax1.plot([], [], 'o-', lw=2, color = '#000000')
+    pendulumTrace1, = ax1.plot([], [], '-', lw=2, color = '#047FFF')
+    pendulumTrace2, = ax1.plot([], [], '-', lw=2, color = '#FF4B00')
+    pendulumTrace3, = ax1.plot([], [], '-', lw=2, color = '#00C415')
+    thetaTrace1, = ax2.plot([], [], '-', lw=2, color = '#047FFF')
+    thetaTrace2, = ax2.plot([], [], '-', lw=2, color = '#FF4B00')
+    thetaTrace3, = ax2.plot([], [], '-', lw=2, color = '#00C415')
+    omegaTrace1, = ax3.plot([], [], '-', lw=2, color = '#047FFF')
+    omegaTrace2, = ax3.plot([], [], '-', lw=2, color = '#FF4B00')
+    omegaTrace3, = ax3.plot([], [], '-', lw=2, color = '#00C415')
+
+    time_template = 'time = %.1fs'
+    time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+
+    
+    def animate(i, x1, y1, x2, y2, x3, y3, line1, line2, line3):
+        line1.set_data(x1[:i], y1[:i])
+        line2.set_data(x2[:i], y2[:i])
+        line3.set_data(x3[:i], y3[:i])
+        return line1, line2, line3,
+    
+    def pendulum(i, x1, y1, x2, y2, x3, y3, trace1, trace2, trace3, pendulum):
+        segmentX = [0, x1[i], x2[i], x3[i]]
+        segmentY = [0, y1[i], y2[i], y3[i]]
+        trace1.set_data(x1[i-15:i], y1[i-15:i])
+        trace2.set_data(x2[i-15:i], y2[i-15:i])
+        trace3.set_data(x3[i-15:i], y3[i-15:i])
+        pendulum.set_data(segmentX, segmentY)
+        time_text.set_text(time_template % (i*h))
+        return trace1, trace2, trace3, pendulum, time_text,
+
+  
+
+    anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, x2, y2, x3, y3, pendulumTrace1, pendulumTrace2, pendulumTrace3, pendulumSegment], interval=h, blit=True)
+
+    anim2 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, t, t2, t, t3, thetaTrace1, thetaTrace2, thetaTrace3], interval=h, blit=True)
+
+    anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, t, o2, t, o3, omegaTrace1, omegaTrace2, omegaTrace3], interval=h, blit=True)
+
+
+    # plt.figure(1)
+    # plt.title('Pendulum Motion:')
+    # plt.plot(np.sin(t1), -np.cos(t1))
+    # plt.plot(np.sin(t1)+np.sin(t2), -np.cos(t1)-np.cos(t2))
+    
+    # plt.figure(2)
+    # plt.title('Theta vs Time:')
+    # plt.plot(t, t1)
+    # plt.plot(t, t2)
+
+    # plt.figure(3)
+    # plt.title('Omega vs Time:')
+    # plt.plot(t, o1)
+    # plt.plot(t, o2)
 
     plt.show()
 
