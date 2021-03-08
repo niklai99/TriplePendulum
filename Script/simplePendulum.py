@@ -150,7 +150,7 @@ def simplePendulum():
         ax3.legend(loc = 'upper right')
 
         time_template = 'time = %.1fs'
-        time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+        time_text = ax1.text(0.05, 0.95, '', transform=ax1.transAxes)
 
 
         def animate(i, x, y, line):

@@ -121,7 +121,7 @@ def figureSetup(t1, t2, t3, o1, o2, o3, par):
 
 
 
-def pendoloTriplo():
+def triplePendulum():
     '''Pendolo Triplo'''
     print('\nHai scelto il pendolo triplo')
 
@@ -260,7 +260,7 @@ def pendoloTriplo():
         ax3.legend(loc = 'upper right', ncol = 3)
 
         time_template = 'time = %.1fs'
-        time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
+        time_text = ax1.text(0.05, 0.95, '', transform=ax1.transAxes)
 
 
         def animate(i, x1, y1, x2, y2, x3, y3, line1, line2, line3):

@@ -4,7 +4,7 @@ from matplotlib import animation
 
 from simplePendulum import simplePendulum
 from doublePendulum import doublePendulum
-from triplePendulum import pendoloTriplo
+from triplePendulum import triplePendulum
 
 
 def main():
@@ -27,7 +27,7 @@ def main():
         doublePendulum()
 
     elif mode == 3:
-        pendoloTriplo()
+        triplePendulum()
 
     else:
         print('Opzione non supportata')
