@@ -91,12 +91,14 @@ def figureSetup(t1, t2, o1, o2, par):
     varT = (tMax - tMin) / 2
     varO = (oMax - oMin) / 2
 
-    fig1 = plt.figure(figsize=(14, 6))
-    gs = fig1.add_gridspec(9, 33)
+    fig1 = plt.figure(figsize=(16, 6))
+    gs = fig1.add_gridspec(9, 35)
 
-    ax1 = fig1.add_subplot(gs[:, 20:])
+    ax1 = fig1.add_subplot(gs[:, 20:-2])
     ax2 = fig1.add_subplot(gs[0:4, 0:17])
     ax3 = fig1.add_subplot(gs[5:9, 0:17])
+    ax4 = fig1.add_subplot(gs[:, -2:-1])
+    ax5 = fig1.add_subplot(gs[:, -1:])
 
     ax1.set_xlim(-((l1+l2) + (l1+l2)/5), (l1+l2) + (l1+l2)/5)
     ax1.set_ylim(-((l1+l2) + (l1+l2)/5), (l1+l2) + (l1+l2)/5)
@@ -121,7 +123,17 @@ def figureSetup(t1, t2, o1, o2, par):
     ax3.set_xlabel('time (s)', loc = 'right')
     ax3.set_ylabel('\u03C9 (rad/s)', loc = 'top')
 
-    return fig1, ax1, ax2, ax3
+    ax4.axes.xaxis.set_ticks([])
+    ax4.axes.yaxis.set_ticks([])
+    ax4.yaxis.set_label_position("right")
+    #ax4.set_ylabel('kinetic energy', rotation = 270, labelpad = 15)
+
+    ax5.axes.xaxis.set_ticks([])
+    ax5.axes.yaxis.set_ticks([])
+    ax5.yaxis.set_label_position("right")
+    #ax5.set_ylabel('potential energy', rotation = 270, labelpad = 15)
+
+    return fig1, ax1, ax2, ax3, ax4, ax5
 
 
 
@@ -176,7 +188,7 @@ def doublePendulum():
 
     x1, y1, x2, y2 = computeCoordinates(t1, t2, par)
 
-    fig1, ax1, ax2, ax3 = figureSetup(t1, t2, o1, o2, par)
+    fig1, ax1, ax2, ax3, ax4, ax5 = figureSetup(t1, t2, o1, o2, par)
     
     # static plots
     if mode == 0:
@@ -219,17 +231,43 @@ def doublePendulum():
         time_text = ax1.text(0.05, 0.95, '', transform=ax1.transAxes, weight = 'bold')
 
         kineticEnergy_template = 'kenetic energy = %.2f J'
-        kineticEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes)
+        kineticEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes, fontsize = 0)
         potentialEnergy_template = 'potential energy = %.2f J'
-        potentialEnergy_text = ax1.text(0.05, 0.82, '', transform=ax1.transAxes)
+        potentialEnergy_text = ax1.text(0.05, 0.82, '', transform=ax1.transAxes, fontsize = 0)
         totalEnergy_template = 'total energy = %.2f J'
-        totalEnergy_text = ax1.text(0.05, 0.77, '', transform=ax1.transAxes)
+        totalEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes)
+
+        ax4.set_xlim(left = 0, right = 1)
+        ax4.set_ylim(bottom = -1, top = 1)
+
+        rect1 = plt.Rectangle((0, -1), 1, 1, fill=True, color='white', ec='black')
+        ax4.add_patch(rect1)
+
+        ax5.set_xlim(left = 0, right = 1)
+        ax5.set_ylim(bottom =-1, top = 1)
+
+        rect2 = plt.Rectangle((0, -1), 1, 1, fill=True, color='white', ec='black')
+        ax5.add_patch(rect2)
 
 
         def animate(i, x1, y1, x2, y2, line1, line2):
+
             line1.set_data(x1[:i], y1[:i])
             line2.set_data(x2[:i], y2[:i])
+
             return line1, line2,
+        
+        def kineticEnergy_anim(i, ax):
+
+            rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.amax(E)+np.amax(U)), color = 'red')
+
+            return rect1,
+        
+        def potentialEnergy_anim(i, ax):
+
+            rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.amax(E)+np.amax(U)), color = 'blue')
+
+            return rect2,
 
         def pendulum(i, x1, y1, x2, y2, trace1, trace2, masses, segments):
 
@@ -263,8 +301,10 @@ def doublePendulum():
             return trace1, trace2, mass0, mass1, mass2, segments, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
 
         anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, x2, y2, pendulumTrace1, pendulumTrace2, masses, pendulumSegments], interval=h, blit=True)
-        anim2 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, t, t2, thetaTrace1, thetaTrace2], interval=h, blit=True)
-        anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, t, o2, omegaTrace1, omegaTrace2], interval=h, blit=True)
+        anim2 = animation.FuncAnimation(fig1, kineticEnergy_anim, frames=len(t), fargs=[ax4], interval=h, blit=True)
+        anim3 = animation.FuncAnimation(fig1, potentialEnergy_anim, frames=len(t), fargs=[ax5], interval=h, blit=True)
+        anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, t, t2, thetaTrace1, thetaTrace2], interval=h, blit=True)
+        anim5 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, t, o2, omegaTrace1, omegaTrace2], interval=h, blit=True)
 
 
     plt.show()
