@@ -160,9 +160,17 @@ def simplePendulum():
     # animated plots
     elif mode == 1:
 
-        pendulumSegment, = ax1.plot([], [], 'o-', lw=2, color = '#000000')
+        pendulumMass0, = ax1.plot([], [], 'o', color = '#000000', markersize = 5)
+        pendulumMass1, = ax1.plot([], [], 'o', color = '#000000', markersize = 5+m1)
+
+        masses = [pendulumMass0, pendulumMass1]
+
+        pendulumSegment, = ax1.plot([], [], '-', lw=2, color = '#000000')
+
         pendulumTrace, = ax1.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass trajectory')
+
         thetaTrace, = ax2.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
+
         omegaTrace, = ax3.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
 
         ax1.legend(loc = 'upper right')
@@ -184,13 +192,24 @@ def simplePendulum():
             line.set_data(x[:i], y[:i])
             return line,
 
-        def pendulum(i, x, y, trace, pendulum):
+        def pendulum(i, x, y, trace, masses, segments):
+
+            massX0 = [0]
+            massY0 = [0]
+            massX1 = [x1[i]]
+            massY1 = [y1[i]]
             
             segmentX = [0, x[i]]
             segmentY = [0, y[i]]
 
+            mass0, mass1 = masses
+
             trace.set_data(x[i-15:i], y[i-15:i])
-            pendulum.set_data(segmentX, segmentY)
+
+            mass0.set_data(massX0, massY0)
+            mass1.set_data(massX1, massY1)
+
+            segments.set_data(segmentX, segmentY)
 
             time_text.set_text(time_template % (i*h))
 
@@ -198,10 +217,10 @@ def simplePendulum():
             kineticEnergy_text.set_text(kineticEnergy_template % (E[i]))
             potentialEnergy_text.set_text(potentialEnergy_template % (U[i]))
 
-            return trace, pendulum, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
+            return trace, mass0, mass1, segments, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
 
 
-        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, pendulumTrace, pendulumSegment], interval=h, blit=True)
+        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, pendulumTrace, masses, pendulumSegment], interval=h, blit=True)
         anim2 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, theta1, thetaTrace], interval=h, blit=True)
         anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, omega1, omegaTrace], interval=h, blit=True)
 

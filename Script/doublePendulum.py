@@ -195,11 +195,19 @@ def doublePendulum():
     # animated plots
     elif mode == 1:
 
-        pendulumSegment, = ax1.plot([], [], 'o-', lw=2, color = '#000000')
+        pendulumMass0, = ax1.plot([], [], 'o', color = '#000000', markersize = 5)
+        pendulumMass1, = ax1.plot([], [], 'o', color = '#000000', markersize = 5+m1)
+        pendulumMass2, = ax1.plot([], [], 'o', color = '#000000', markersize = 5+m2)
+        masses = [pendulumMass0, pendulumMass1, pendulumMass2]
+
+        pendulumSegments, = ax1.plot([], [], '-', lw=2, color = '#000000')
+
         pendulumTrace1, = ax1.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass trajectory')
         pendulumTrace2, = ax1.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass trajectory')
+
         thetaTrace1, = ax2.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
         thetaTrace2, = ax2.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass \u03B8(t)')
+
         omegaTrace1, = ax3.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
         omegaTrace2, = ax3.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass \u03C9(t)')
 
@@ -223,7 +231,14 @@ def doublePendulum():
             line2.set_data(x2[:i], y2[:i])
             return line1, line2,
 
-        def pendulum(i, x1, y1, x2, y2, trace1, trace2, pendulum):
+        def pendulum(i, x1, y1, x2, y2, trace1, trace2, masses, segments):
+
+            massX0 = [0]
+            massY0 = [0]
+            massX1 = [x1[i]]
+            massY1 = [y1[i]]
+            massX2 = [x2[i]]
+            massY2 = [y2[i]]
 
             segmentX = [0, x1[i], x2[i]]
             segmentY = [0, y1[i], y2[i]]
@@ -231,7 +246,13 @@ def doublePendulum():
             trace1.set_data(x1[i-25:i], y1[i-25:i])
             trace2.set_data(x2[i-40:i], y2[i-40:i])
 
-            pendulum.set_data(segmentX, segmentY)
+            mass0, mass1, mass2 = masses
+
+            mass0.set_data(massX0, massY0)
+            mass1.set_data(massX1, massY1)
+            mass2.set_data(massX2, massY2)
+
+            segments.set_data(segmentX, segmentY)
 
             time_text.set_text(time_template % (i*h))
 
@@ -239,9 +260,9 @@ def doublePendulum():
             kineticEnergy_text.set_text(kineticEnergy_template % (E[i]))
             potentialEnergy_text.set_text(potentialEnergy_template % (U[i]))
 
-            return trace1, trace2, pendulum, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
+            return trace1, trace2, mass0, mass1, mass2, segments, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
 
-        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, x2, y2, pendulumTrace1, pendulumTrace2, pendulumSegment], interval=h, blit=True)
+        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, x2, y2, pendulumTrace1, pendulumTrace2, masses, pendulumSegments], interval=h, blit=True)
         anim2 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, t, t2, thetaTrace1, thetaTrace2], interval=h, blit=True)
         anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, t, o2, omegaTrace1, omegaTrace2], interval=h, blit=True)
 
