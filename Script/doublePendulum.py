@@ -259,13 +259,13 @@ def doublePendulum():
         
         def kineticEnergy_anim(i, ax):
 
-            rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.amax(E)+np.amax(U)), color = 'red')
+            rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'red')
 
             return rect1,
         
         def potentialEnergy_anim(i, ax):
 
-            rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.amax(E)+np.amax(U)), color = 'blue')
+            rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'blue')
 
             return rect2,
 

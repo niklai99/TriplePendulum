@@ -198,7 +198,7 @@ def simplePendulum():
         potentialEnergy_text = ax1.text(0.05, 0.82, '', transform=ax1.transAxes, fontsize = 0)
         totalEnergy_template = 'total energy = %.2f J'
         totalEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes)
-        
+
 
         ax4.set_xlim(left = 0, right = 1)
         ax4.set_ylim(bottom = -1, top = 1)
@@ -220,13 +220,13 @@ def simplePendulum():
 
         def kineticEnergy_anim(i, ax):
 
-            rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.amax(E)+np.amax(U)), color = 'red')
+            rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'red')
 
             return rect1,
         
         def potentialEnergy_anim(i, ax):
 
-            rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.amax(E)+np.amax(U)), color = 'blue')
+            rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'blue')
 
             return rect2,
 
