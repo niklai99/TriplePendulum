@@ -67,35 +67,39 @@ def figureSetup(t1, t2, o1, o2, par):
     o2Max = np.amax(o2)
     oMax = np.maximum(o1Max, o2Max)
 
+
+    varT = (tMax - tMin) / 2
+    varO = (oMax - oMin) / 2
+
     fig1 = plt.figure(figsize=(14, 6))
-    gs = fig1.add_gridspec(5, 9)
+    gs = fig1.add_gridspec(9, 33)
 
-    ax1 = fig1.add_subplot(gs[:, 5:])
-    ax2 = fig1.add_subplot(gs[0:2, :-5])
-    ax3 = fig1.add_subplot(gs[3:5, :-5])
+    ax1 = fig1.add_subplot(gs[:, 20:])
+    ax2 = fig1.add_subplot(gs[0:4, 0:17])
+    ax3 = fig1.add_subplot(gs[5:9, 0:17])
 
-    ax1.set_xlim(-l1-l2, l1+l2)
-    ax1.set_ylim(-l1-l2, l1+l2)
+    ax1.set_xlim(-((l1+l2) + (l1+l2)/5), (l1+l2) + (l1+l2)/5)
+    ax1.set_ylim(-((l1+l2) + (l1+l2)/5), (l1+l2) + (l1+l2)/5)
 
     ax2.set_xlim(t0, tf)
-    ax2.set_ylim(tMin, tMax)
+    ax2.set_ylim(tMin - varT/2, tMax + varT)
 
     ax3.set_xlim(t0, tf)
-    ax3.set_ylim(oMin, oMax)
+    ax3.set_ylim(oMin - varO/2, oMax + varO)
 
     
-    ax1.set_title('Pendulum trajectory:')
-    ax2.set_title('Theta vs Time:')
-    ax3.set_title('Omega vs Time:')
+    ax1.set_title('Pendulum Trajectory')
+    ax2.set_title('\u03B8 trend over time')
+    ax3.set_title('\u03C9 trend over time')
 
-    ax1.set_xlabel('x axis')
-    ax1.set_ylabel('y axis')
+    ax1.set_xlabel('x coordinate (m)')
+    ax1.set_ylabel('y coordinate (m)')
 
-    ax2.set_xlabel('time')
-    ax2.set_ylabel('theta')
+    ax2.set_xlabel('time (s)', loc = 'right')
+    ax2.set_ylabel('\u03B8 (rad)', loc = 'top')
 
-    ax3.set_xlabel('time')
-    ax3.set_ylabel('omega')
+    ax3.set_xlabel('time (s)', loc = 'right')
+    ax3.set_ylabel('\u03C9 (rad/s)', loc = 'top')
 
     return fig1, ax1, ax2, ax3
 
@@ -105,10 +109,25 @@ def doublePendulum():
     '''Pendolo Doppio'''
     print('\nHai scelto il pendolo doppio')
 
-    g = 9.81
+    print('Premi "d" per parametri default\nPremi "s" per scegliere i parametri')
+    choice = str(input(''))
 
-    par = inputParameters()
-    m1, m2, l1, l2, q0, t0, tf, nstep = par
+    if choice == 'd':
+        m1 = 1
+        m2 = 1
+        l1 = 1
+        l2 = 1
+        q0 = np.array([np.radians(135), np.radians(0), np.radians(135), np.radians(0)])
+        t0 = 0
+        tf = 10
+        nstep = 1000
+        par = [m1, m2, l1, l2, q0, t0, tf, nstep]
+    
+    elif choice == 's':
+        par = inputParameters()
+        m1, m2, l1, l2, q0, t0, tf, nstep = par
+
+    g = 9.81
 
     print('\nDigita 0 per visualizzare grafici statici\nDigita 1 per visualizzare grafici animati\n')
     mode = int(input(''))
@@ -140,23 +159,31 @@ def doublePendulum():
     # static plots
     if mode == 0:
 
-        ax1.plot(x1, y1, '-', lw=2, color = '#047FFF') 
-        ax1.plot(x2, y2, '-', lw=2, color = '#FF4B00') 
-        ax2.plot(t, t1, '-', lw=2, color = '#047FFF')
-        ax2.plot(t, t2, '-', lw=2, color = '#FF4B00')
-        ax3.plot(t, o1, '-', lw=2, color = '#047FFF') 
-        ax3.plot(t, o2, '-', lw=2, color = '#FF4B00')
+        ax1.plot(x1, y1, '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
+        ax1.plot(x2, y2, '-', lw=2, color = '#FF4B00', label = '2nd mass trajectory') 
+        ax2.plot(t, t1, '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
+        ax2.plot(t, t2, '-', lw=2, color = '#FF4B00', label = '2nd mass \u03B8(t)')
+        ax3.plot(t, o1, '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)') 
+        ax3.plot(t, o2, '-', lw=2, color = '#FF4B00', label = '2nd mass \u03C9(t)')
+
+        ax1.legend(loc = 'upper right', ncol = 1)
+        ax2.legend(loc = 'upper right', ncol = 2)
+        ax3.legend(loc = 'upper right', ncol = 2)
 
     # animated plots
     elif mode == 1:
 
         pendulumSegment, = ax1.plot([], [], 'o-', lw=2, color = '#000000')
-        pendulumTrace1, = ax1.plot([], [], '-', lw=2, color = '#047FFF')
-        pendulumTrace2, = ax1.plot([], [], '-', lw=2, color = '#FF4B00')
-        thetaTrace1, = ax2.plot([], [], '-', lw=2, color = '#047FFF')
-        thetaTrace2, = ax2.plot([], [], '-', lw=2, color = '#FF4B00')
-        omegaTrace1, = ax3.plot([], [], '-', lw=2, color = '#047FFF')
-        omegaTrace2, = ax3.plot([], [], '-', lw=2, color = '#FF4B00')
+        pendulumTrace1, = ax1.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass trajectory')
+        pendulumTrace2, = ax1.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass trajectory')
+        thetaTrace1, = ax2.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
+        thetaTrace2, = ax2.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass \u03B8(t)')
+        omegaTrace1, = ax3.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
+        omegaTrace2, = ax3.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass \u03C9(t)')
+
+        ax1.legend(loc = 'upper right', ncol = 1)
+        ax2.legend(loc = 'upper right', ncol = 2)
+        ax3.legend(loc = 'upper right', ncol = 2)
 
         time_template = 'time = %.1fs'
         time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)

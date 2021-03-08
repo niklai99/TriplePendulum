@@ -40,34 +40,43 @@ def figureSetup(theta1, omega1, par):
     t0 = par[3]
     tf = par[4]
 
+    t1Min = np.amin(theta1)
+    t1Max = np.amax(theta1)
+
+    o1Min = np.amin(omega1)
+    o1Max = np.amax(omega1)
+
+    varT = (t1Max - t1Min) / 2
+    varO = (o1Max - o1Min) / 2
+
     fig1 = plt.figure(figsize=(14, 6))
-    gs = fig1.add_gridspec(5, 9)
+    gs = fig1.add_gridspec(9, 33)
 
-    ax1 = fig1.add_subplot(gs[:, 5:])
-    ax2 = fig1.add_subplot(gs[0:2, :-5])
-    ax3 = fig1.add_subplot(gs[3:5, :-5])
+    ax1 = fig1.add_subplot(gs[:, 20:])
+    ax2 = fig1.add_subplot(gs[0:4, 0:17])
+    ax3 = fig1.add_subplot(gs[5:9, 0:17])
 
-    ax1.set_xlim(-l1, l1)
-    ax1.set_ylim(-l1, l1)
+    ax1.set_xlim(-(l1 + l1/5), l1 + l1/5)
+    ax1.set_ylim(-(l1 + l1/5), l1 + l1/5)
 
     ax2.set_xlim(t0, tf)
-    ax2.set_ylim(np.amin(theta1), np.amax(theta1))
+    ax2.set_ylim(t1Min - varT, t1Max + varT)
 
     ax3.set_xlim(t0, tf)
-    ax3.set_ylim(np.amin(omega1), np.amax(omega1))
+    ax3.set_ylim(o1Min - varO, o1Max + varO)
 
-    ax1.set_title('Pendulum trajectory:')
-    ax2.set_title('Theta vs Time:')
-    ax3.set_title('Omega vs Time:')
+    ax1.set_title('Pendulum Trajectory')
+    ax2.set_title('\u03B8 trend over time')
+    ax3.set_title('\u03C9 trend over time')
 
-    ax1.set_xlabel('x axis')
-    ax1.set_ylabel('y axis')
+    ax1.set_xlabel('x coordinate (m)')
+    ax1.set_ylabel('y coordinate (m)')
 
-    ax2.set_xlabel('time')
-    ax2.set_ylabel('theta')
+    ax2.set_xlabel('time (s)', loc = 'right')
+    ax2.set_ylabel('\u03B8 (rad)', loc = 'top')
 
-    ax3.set_xlabel('time')
-    ax3.set_ylabel('omega')
+    ax3.set_xlabel('time (s)', loc = 'right')
+    ax3.set_ylabel('\u03C9 (rad/s)', loc = 'top')
 
     return fig1, ax1, ax2, ax3
 
@@ -77,10 +86,23 @@ def simplePendulum():
     '''Pendolo Semplice'''
     print('\nHai scelto il Pendolo Semplice\n')
 
-    g = 9.81
+    print('Premi "d" per parametri default\nPremi "s" per scegliere i parametri')
+    choice = str(input(''))
 
-    par = inputParameters()
-    m1, l1, q0, t0, tf, nstep = par
+    if choice == 'd':
+        m1 = 1
+        l1 = 1
+        q0 = np.array([np.radians(135), np.radians(0)])
+        t0 = 0
+        tf = 10
+        nstep = 1000
+        par = [m1, l1, q0, t0, tf, nstep]
+    
+    elif choice == 's':
+        par = inputParameters()
+        m1, l1, q0, t0, tf, nstep = par
+
+    g = 9.81
 
     print('\nDigita 0 per visualizzare grafici statici\nDigita 1 per visualizzare grafici animati\n')
     mode = int(input(''))
@@ -108,17 +130,24 @@ def simplePendulum():
     # static plots
     if mode == 0:
 
-        ax1.plot(x1, y1, '-', lw=2, color = '#047FFF') 
-        ax2.plot(t, theta1, '-', lw=2, color = '#047FFF')
-        ax3.plot(t, omega1, '-', lw=2, color = '#047FFF')
+        ax1.plot(x1, y1, '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
+        ax2.plot(t, theta1, '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
+        ax3.plot(t, omega1, '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
+        ax1.legend(loc = 'upper right')
+        ax2.legend(loc = 'upper right')
+        ax3.legend(loc = 'upper right')
 
     # animated plots
     elif mode == 1:
 
         pendulumSegment, = ax1.plot([], [], 'o-', lw=2, color = '#000000')
-        pendulumTrace, = ax1.plot([], [], '-', lw=2, color = '#047FFF')
-        thetaTrace, = ax2.plot([], [], '-', lw=2, color = '#047FFF')
-        omegaTrace, = ax3.plot([], [], '-', lw=2, color = '#047FFF')
+        pendulumTrace, = ax1.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass trajectory')
+        thetaTrace, = ax2.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
+        omegaTrace, = ax3.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
+
+        ax1.legend(loc = 'upper right')
+        ax2.legend(loc = 'upper right')
+        ax3.legend(loc = 'upper right')
 
         time_template = 'time = %.1fs'
         time_text = ax1.text(0.05, 0.9, '', transform=ax1.transAxes)
