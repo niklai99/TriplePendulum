@@ -23,6 +23,24 @@ def inputParameters():
 
     return par
 
+def computeEnergy(q, par):
+    '''Computes total energy of the system'''
+
+    m1 = par[0]
+    l1 = par[1]
+    t1, o1 = q.T
+
+    E = np.zeros(len(t1))
+    U = np.zeros(len(t1))
+    T = np.zeros(len(t1))
+
+    for i in range(len(t1)):
+        E[i] = 0.5 * m1 * l1**2 * o1[i]**2
+        U[i] = - m1 * 9.81 * l1*np.cos(t1[i])
+        T[i] = E[i] + U[i]
+
+    return E, U, T
+
 
 def computeCoordinates(theta1, par):
     '''Computes cartesian coordinates from generalized coordinates'''
@@ -119,6 +137,8 @@ def simplePendulum():
 
     q, t = rk4(motion, q0, t0 , tf , nstep)
 
+    E, U, T = computeEnergy(q, par)
+
     h = t[1]-t[0]
     theta1, omega1 = q.T
 
@@ -149,8 +169,15 @@ def simplePendulum():
         ax2.legend(loc = 'upper right')
         ax3.legend(loc = 'upper right')
 
-        time_template = 'time = %.1fs'
-        time_text = ax1.text(0.05, 0.95, '', transform=ax1.transAxes)
+        time_template = 'time = %.1f s'
+        time_text = ax1.text(0.05, 0.95, '', transform=ax1.transAxes, weight = 'bold')
+
+        kineticEnergy_template = 'kenetic energy = %.2f J'
+        kineticEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes)
+        potentialEnergy_template = 'potential energy = %.2f J'
+        potentialEnergy_text = ax1.text(0.05, 0.82, '', transform=ax1.transAxes)
+        totalEnergy_template = 'total energy = %.2f J'
+        totalEnergy_text = ax1.text(0.05, 0.77, '', transform=ax1.transAxes)
 
 
         def animate(i, x, y, line):
@@ -158,12 +185,20 @@ def simplePendulum():
             return line,
 
         def pendulum(i, x, y, trace, pendulum):
+            
             segmentX = [0, x[i]]
             segmentY = [0, y[i]]
+
             trace.set_data(x[i-15:i], y[i-15:i])
             pendulum.set_data(segmentX, segmentY)
+
             time_text.set_text(time_template % (i*h))
-            return trace, pendulum, time_text
+
+            totalEnergy_text.set_text(totalEnergy_template % (T[i]))
+            kineticEnergy_text.set_text(kineticEnergy_template % (E[i]))
+            potentialEnergy_text.set_text(potentialEnergy_template % (U[i]))
+
+            return trace, pendulum, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
 
 
         anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, pendulumTrace, pendulumSegment], interval=h, blit=True)
