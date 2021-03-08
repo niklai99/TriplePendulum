@@ -67,12 +67,13 @@ def figureSetup(theta1, omega1, par):
     varT = (t1Max - t1Min) / 2
     varO = (o1Max - o1Min) / 2
 
-    fig1 = plt.figure(figsize=(14, 6))
-    gs = fig1.add_gridspec(9, 33)
+    fig1 = plt.figure(figsize=(15, 6))
+    gs = fig1.add_gridspec(9, 34)
 
-    ax1 = fig1.add_subplot(gs[:, 20:])
+    ax1 = fig1.add_subplot(gs[:, 20:-1])
     ax2 = fig1.add_subplot(gs[0:4, 0:17])
     ax3 = fig1.add_subplot(gs[5:9, 0:17])
+    ax4 = fig1.add_subplot(gs[:, -1:])
 
     ax1.set_xlim(-(l1 + l1/5), l1 + l1/5)
     ax1.set_ylim(-(l1 + l1/5), l1 + l1/5)
@@ -96,7 +97,12 @@ def figureSetup(theta1, omega1, par):
     ax3.set_xlabel('time (s)', loc = 'right')
     ax3.set_ylabel('\u03C9 (rad/s)', loc = 'top')
 
-    return fig1, ax1, ax2, ax3
+    ax4.axes.xaxis.set_ticks([])
+    ax4.axes.yaxis.set_ticks([])
+    ax4.yaxis.set_label_position("right")
+    ax4.set_ylabel('energy', rotation = 270, labelpad = 15)
+
+    return fig1, ax1, ax2, ax3, ax4
 
 
 
@@ -145,7 +151,7 @@ def simplePendulum():
     x1, y1 = computeCoordinates(theta1, par)
 
 
-    fig1, ax1, ax2, ax3 = figureSetup(theta1, omega1, par)
+    fig1, ax1, ax2, ax3, ax4 = figureSetup(theta1, omega1, par)
 
     # static plots
     if mode == 0:
@@ -181,19 +187,38 @@ def simplePendulum():
         time_text = ax1.text(0.05, 0.95, '', transform=ax1.transAxes, weight = 'bold')
 
         kineticEnergy_template = 'kenetic energy = %.2f J'
-        kineticEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes)
+        kineticEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes, fontsize = 0)
         potentialEnergy_template = 'potential energy = %.2f J'
-        potentialEnergy_text = ax1.text(0.05, 0.82, '', transform=ax1.transAxes)
+        potentialEnergy_text = ax1.text(0.05, 0.82, '', transform=ax1.transAxes, fontsize = 0)
         totalEnergy_template = 'total energy = %.2f J'
-        totalEnergy_text = ax1.text(0.05, 0.77, '', transform=ax1.transAxes)
+        totalEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes)
 
+
+        xLeft, xRight = ax1.get_xlim()
+        yBot, yTop = ax1.get_ylim()
+        deltaX = xRight-xLeft
+        deltaY = yTop-yBot
+
+        ax4.set_xlim(left = 0, right = deltaX/5)
+        ax4.set_ylim(bottom = yBot, top = yTop)
+
+        rect = plt.Rectangle((0,yBot), deltaX/5, deltaY, fill=True, color='blue', ec='black')
+        ax4.add_patch(rect)
 
         def animate(i, x, y, line):
+
             line.set_data(x[:i], y[:i])
+
             return line,
 
-        def pendulum(i, x, y, trace, masses, segments):
+        def energy(i, ax):
 
+            rect = ax.fill_between(x = (0, deltaX/5), y1 = yBot, y2 = (E[i] / T[i]) + yBot, color = 'red')
+
+            return rect,
+
+        def pendulum(i, x, y, trace, masses, segments):
+    
             massX0 = [0]
             massY0 = [0]
             massX1 = [x1[i]]
@@ -221,8 +246,9 @@ def simplePendulum():
 
 
         anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, pendulumTrace, masses, pendulumSegment], interval=h, blit=True)
-        anim2 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, theta1, thetaTrace], interval=h, blit=True)
-        anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, omega1, omegaTrace], interval=h, blit=True)
+        anim2 = animation.FuncAnimation(fig1, energy, frames=len(t), fargs=[ax4], interval=h, blit=True)
+        anim3 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, theta1, thetaTrace], interval=h, blit=True)
+        anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, omega1, omegaTrace], interval=h, blit=True)
 
 
     plt.show()
