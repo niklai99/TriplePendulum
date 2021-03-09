@@ -1,3 +1,16 @@
+"""
+    TRIPLE PENDULUM SCRIPT
+
+    Author: Nicolò Lai
+    Project: Triple Pendulum 
+    Goal: Solving the equation of motions of a triple pendulum
+    Means: Runge-Kutta 4 iterative method
+
+    RUNGE-KUTTA 4 MODULE
+
+    The following code is a simple implementation of the Runge-Kutta 4 iterative method
+"""
+
 import numpy as np 
 
 

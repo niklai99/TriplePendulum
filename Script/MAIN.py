@@ -1,3 +1,16 @@
+"""
+    TRIPLE PENDULUM SCRIPT
+
+    Author: Nicolò Lai
+    Project: Triple Pendulum 
+    Goal: Solving the equation of motions of a triple pendulum
+    Means: Runge-Kutta 4 iterative method
+
+    MAIN MODULE
+
+    The following code lets the user choose whether to go through a simple, double or triple pendulum simulation
+"""
+
 import numpy as np 
 import matplotlib.pyplot as plt 
 from matplotlib import animation
