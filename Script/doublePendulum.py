@@ -18,27 +18,7 @@ from matplotlib import animation
 from rungeKutta4 import RungeKutta4
 from equationsMotion import doublePendulumEq
 from inputParameters import inputParameters
-
-
-def computeEnergy(q, par):
-    '''Computes total energy of the system'''
-
-    m1 = par[0]
-    m2 = par[1]
-    l1 = par[2]
-    l2 = par[3]
-    t1, o1, t2, o2 = q.T
-
-    E = np.zeros(len(t1))
-    U = np.zeros(len(t1))
-    T = np.zeros(len(t1))
-
-    for i in range(len(t1)):
-        E[i] = 0.5 * (m1+m2) * l1**2 * o1[i]**2 + 0.5 * m2 * l2**2 * o2[i]**2 + m2 * l1 * l2 * o1[i]*o2[i]*np.cos(t1[i]-t2[i])
-        U[i] = - m1 * 9.81 * l1*np.cos(t1[i]) - m2 * 9.81 * (l1*np.cos(t1[i]) + l2*np.cos(t2[i]))
-        T[i] = E[i] + U[i]
-
-    return E, U, T
+from computeEnergy import doublePendulumEnergy
 
 
 def computeCoordinates(t1, t2, par):
@@ -158,7 +138,7 @@ def doublePendulum(n):
 
     q, t = RungeKutta4(doublePendulumEq, par)
 
-    E, U, T = computeEnergy(q, par)
+    E, U, T = doublePendulumEnergy(q, par)
 
     h = t[1]-t[0]
     t1, o1, t2, o2 = q.T

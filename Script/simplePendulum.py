@@ -1,19 +1,8 @@
 # TO DO
 
-# fare una funzione generica "inputParameters" in un altro file che si adegua automaticamente al numero di parametri in ingresso
-# prende in input il numero digitato dall'utente quando sceglie se trattare pendolo semplice, doppio, triplo
-# a seconda di quel numero entra in un if elif oppure acquisisce fino a (4*n + 3) parametri in ordine
-# li salvo in un array e poi li spacchetto dove opportuno
-
-# creare un modulo "computeEnergy" e metterci dentro "singlePendulumEnergy", "doublePendulumEnergy" e "triplePendulumEnergy"
-
 # creare un modulo "figureSetup" e dividere i casi in cui i grafici siano statici o animati
 
 # se possibile creare un modulo, o almeno una funzione separata, per gestire le animazioni
-
-
-
-
 
 
 """
@@ -38,25 +27,7 @@ from matplotlib import animation
 from rungeKutta4 import RungeKutta4
 from equationsMotion import simplePendulumEq
 from inputParameters import inputParameters
-
-
-def computeEnergy(q, par):
-    '''Computes total energy of the system'''
-
-    m1 = par[0]
-    l1 = par[1]
-    t1, o1 = q.T
-
-    E = np.zeros(len(t1))
-    U = np.zeros(len(t1))
-    T = np.zeros(len(t1))
-
-    for i in range(len(t1)):
-        E[i] = 0.5 * m1 * l1**2 * o1[i]**2
-        U[i] = - m1 * 9.81 * l1*np.cos(t1[i])
-        T[i] = E[i] + U[i]
-
-    return E, U, T
+from computeEnergy import simplePendulumEnergy
 
 
 def computeCoordinates(theta1, par):
@@ -158,7 +129,7 @@ def simplePendulum(n):
 
     q, t = RungeKutta4(simplePendulumEq, par)
 
-    E, U, T = computeEnergy(q, par)
+    E, U, T = simplePendulumEnergy(q, par)
 
     h = t[1]-t[0]
     theta1, omega1 = q.T
