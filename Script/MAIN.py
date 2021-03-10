@@ -34,13 +34,13 @@ def main():
 
 
     if mode == 1:
-        simplePendulum()
+        simplePendulum(mode)
     
     elif mode == 2:
-        doublePendulum()
+        doublePendulum(mode)
 
     elif mode == 3:
-        triplePendulum()
+        triplePendulum(mode)
 
     else:
         print('Opzione non supportata')

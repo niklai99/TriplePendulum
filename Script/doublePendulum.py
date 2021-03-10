@@ -17,30 +17,8 @@ from matplotlib import animation
 
 from rungeKutta4 import RungeKutta4
 from equationsMotion import doublePendulumEq
+from inputParameters import inputParameters
 
-def inputParameters():
-    '''Read parameters from keyboard'''
-
-    m1 = float(input('\nInscerisci la massa del primo punto: '))
-    m2 = float(input('\nInscerisci la massa del secondo punto: '))
-    l1 = float(input('\nInscerisci la lunghezza della prima fune: '))
-    l2 = float(input('\nInscerisci la lunghezza della seconda fune: '))
-
-    q01 = float(input('\nInscersci la posizione iniziale del primo punto (in deg): '))
-    q02 = float(input('\nInscersci la posizione iniziale del secondo punto (in deg): '))
-
-    u01 = float(input('\nInscersci la velocità iniziale del primo punto (in deg/s): '))
-    u02 = float(input('\nInscersci la velocità iniziale del secondo punto (in deg/s): '))
-
-    q0 = np.array([np.radians(q01), np.radians(u01), np.radians(q02), np.radians(u02)])
-
-    t0 = int(input("\nInscerisci l'istante iniziale: "))
-    tf = int(input("\nInscerisci l'istante finale: "))
-    nstep = int(input('\nInscerisci il numero di iterazioni: '))
-
-    par = [m1, m2, l1, l2, q0, t0, tf, nstep]
-
-    return par
 
 def computeEnergy(q, par):
     '''Computes total energy of the system'''
@@ -151,7 +129,7 @@ def figureSetup(t1, t2, o1, o2, par):
 
 
 
-def doublePendulum():
+def doublePendulum(n):
     '''Pendolo Doppio'''
     print('\nHai scelto il pendolo doppio')
 
@@ -170,7 +148,7 @@ def doublePendulum():
         par = [m1, m2, l1, l2, q0, t0, tf, nstep]
     
     elif choice == 's':
-        par = inputParameters()
+        par = inputParameters(n)
         m1, m2, l1, l2, q0, t0, tf, nstep = par
 
     g = 9.81

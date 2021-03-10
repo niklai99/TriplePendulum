@@ -1,3 +1,21 @@
+# TO DO
+
+# fare una funzione generica "inputParameters" in un altro file che si adegua automaticamente al numero di parametri in ingresso
+# prende in input il numero digitato dall'utente quando sceglie se trattare pendolo semplice, doppio, triplo
+# a seconda di quel numero entra in un if elif oppure acquisisce fino a (4*n + 3) parametri in ordine
+# li salvo in un array e poi li spacchetto dove opportuno
+
+# creare un modulo "computeEnergy" e metterci dentro "singlePendulumEnergy", "doublePendulumEnergy" e "triplePendulumEnergy"
+
+# creare un modulo "figureSetup" e dividere i casi in cui i grafici siano statici o animati
+
+# se possibile creare un modulo, o almeno una funzione separata, per gestire le animazioni
+
+
+
+
+
+
 """
     TRIPLE PENDULUM SCRIPT
 
@@ -11,31 +29,16 @@
     The following code deals with the simple pendulum simulation
 """
 
+# python modules
 import numpy as np 
 import matplotlib.pyplot as plt 
 from matplotlib import animation
 
+# custom made modules
 from rungeKutta4 import RungeKutta4
 from equationsMotion import simplePendulumEq
+from inputParameters import inputParameters
 
-def inputParameters():
-    '''Read parameters from keyboard'''
-
-    m1 = float(input('\nInscerisci la massa del punto: '))
-    l1 = float(input('\nInscerisci la lunghezza della fune: '))
-
-    q01 = float(input('\nInscersci la posizione iniziale del pendolo (in deg): '))
-    u01 = float(input('\nInscersci la velocità iniziale del pendolo (in deg/s): '))
-
-    q0 = np.array([np.radians(q01), np.radians(u01)])
-
-    t0 = int(input("\nInscerisci l'istante iniziale: "))
-    tf = int(input("\nInscerisci l'istante finale: "))
-    nstep = int(input('\nInscerisci il numero di iterazioni: '))
-
-    par = [m1, l1, q0, t0, tf, nstep]
-
-    return par
 
 def computeEnergy(q, par):
     '''Computes total energy of the system'''
@@ -126,7 +129,7 @@ def figureSetup(theta1, omega1, par):
 
 
 
-def simplePendulum():
+def simplePendulum(n):
     '''Pendolo Semplice'''
     print('\nHai scelto il Pendolo Semplice\n')
 
@@ -141,9 +144,10 @@ def simplePendulum():
         tf = 10
         nstep = 1000
         par = [m1, l1, q0, t0, tf, nstep]
+        print(par)
     
     elif choice == 's':
-        par = inputParameters()
+        par = inputParameters(n)
         m1, l1, q0, t0, tf, nstep = par
 
     g = 9.81

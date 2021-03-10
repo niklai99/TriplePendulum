@@ -22,11 +22,11 @@ def RungeKutta4(f, par):
     tf = par[-2]
     n  = par[-1]
 
-    t = np.linspace(t0, tf, n+1)
+    t = np.linspace(int(t0), int(tf), int(n)+1)
     h = t[1]-t[0]
-    q = np.array((n+1)*[q0])
+    q = np.array((int(n)+1)*[q0])
     
-    for i in range(n):
+    for i in range(int(n)):
         k1 = h * f(q[i], t[i], par)
         k2 = h * f(q[i] + 0.5 * k1, t[i] + 0.5*h, par)
         k3 = h * f(q[i] + 0.5 * k2, t[i] + 0.5*h, par)

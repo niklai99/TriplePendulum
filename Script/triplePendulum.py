@@ -17,37 +17,7 @@ from matplotlib import animation
 
 from rungeKutta4 import RungeKutta4
 from equationsMotion import triplePendulumEq
-
-
-def inputParameters():
-    '''Read parameters from keyboard'''
-
-    m1 = float(input('\nInscerisci la massa del primo punto: '))
-    m2 = float(input('\nInscerisci la massa del secondo punto: '))
-    m3 = float(input('\nInscerisci la massa del terzo punto: '))
-    l1 = float(input('\nInscerisci la lunghezza della prima fune: '))
-    l2 = float(input('\nInscerisci la lunghezza della seconda fune: '))
-    l3 = float(input('\nInscerisci la lunghezza della terza fune: '))
-
-    q01 = float(input('\nInscersci la posizione iniziale del primo punto (in deg): '))
-    q02 = float(input('\nInscersci la posizione iniziale del secondo punto (in deg): '))
-    q03 = float(input('\nInscersci la posizione iniziale del terzo punto (in deg): '))
-
-    u01 = float(input('\nInscersci la velocità iniziale del primo punto (in deg/s): '))
-    u02 = float(input('\nInscersci la velocità iniziale del secondo punto (in deg/s): '))
-    u03 = float(input('\nInscersci la velocità iniziale del terzo punto (in deg/s): '))
-
-    q0 = np.array([np.radians(q01), np.radians(u01), 
-                    np.radians(q02), np.radians(u02),
-                    np.radians(q03), np.radians(u03)])
-
-    t0 = int(input("\nInscerisci l'istante iniziale: "))
-    tf = int(input("\nInscerisci l'istante finale: "))
-    nstep = int(input('\nInscerisci il numero di iterazioni: '))
-
-    par = [m1, m2, m3, l1, l2, l3, q0, t0, tf, nstep]
-
-    return par
+from inputParameters import inputParameters
 
 
 def computeEnergy(q, par):
@@ -170,7 +140,7 @@ def figureSetup(t1, t2, t3, o1, o2, o3, par):
 
 
 
-def triplePendulum():
+def triplePendulum(n):
     '''Pendolo Triplo'''
     print('\nHai scelto il pendolo triplo')
 
@@ -192,7 +162,7 @@ def triplePendulum():
         par = [m1, m2, m3, l1, l2, l3, q0, t0, tf, nstep]
     
     elif choice == 's':
-        par = inputParameters()
+        par = inputParameters(n)
         m1, m2, m3, l1, l2, l3, q0, t0, tf, nstep = par
 
     g = 9.81
