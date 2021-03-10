@@ -30,27 +30,27 @@ from inputParameters import inputParameters
 from computeEnergy import simplePendulumEnergy
 
 
-def computeCoordinates(theta1, par):
+def computeCoordinates(t1, par):
     '''Computes cartesian coordinates from generalized coordinates'''
 
     l1 = par[1]
 
-    x1 = +l1*np.sin(theta1)
-    y1 = -l1*np.cos(theta1)
+    x1 = +l1*np.sin(t1)
+    y1 = -l1*np.cos(t1)
     return x1, y1
 
-def figureSetup(theta1, omega1, par):
+def figureSetup(t1, o1, par):
     '''Plot figure configuration'''
 
     l1 = par[1]
     t0 = par[3]
     tf = par[4]
 
-    t1Min = np.amin(theta1)
-    t1Max = np.amax(theta1)
+    t1Min = np.amin(t1)
+    t1Max = np.amax(t1)
 
-    o1Min = np.amin(omega1)
-    o1Max = np.amax(omega1)
+    o1Min = np.amin(o1)
+    o1Max = np.amax(o1)
 
     varT = (t1Max - t1Min) / 2
     varO = (o1Max - o1Min) / 2
@@ -132,19 +132,19 @@ def simplePendulum(n):
     E, U, T = simplePendulumEnergy(q, par)
 
     h = t[1]-t[0]
-    theta1, omega1 = q.T
+    t1, o1 = q.T
 
-    x1, y1 = computeCoordinates(theta1, par)
+    x1, y1 = computeCoordinates(t1, par)
 
 
-    fig1, ax1, ax2, ax3, ax4, ax5 = figureSetup(theta1, omega1, par)
+    fig1, ax1, ax2, ax3, ax4, ax5 = figureSetup(t1, o1, par)
 
     # static plots
     if mode == 0:
 
         ax1.plot(x1, y1, '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
-        ax2.plot(t, theta1, '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
-        ax3.plot(t, omega1, '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
+        ax2.plot(t, t1, '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
+        ax3.plot(t, o1, '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
         ax1.legend(loc = 'upper right')
         ax2.legend(loc = 'upper right')
         ax3.legend(loc = 'upper right')
@@ -241,8 +241,8 @@ def simplePendulum(n):
         anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, pendulumTrace, masses, pendulumSegment], interval=h, blit=True)
         anim2 = animation.FuncAnimation(fig1, kineticEnergy_anim, frames=len(t), fargs=[ax4], interval=h, blit=True)
         anim3 = animation.FuncAnimation(fig1, potentialEnergy_anim, frames=len(t), fargs=[ax5], interval=h, blit=True)
-        anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, theta1, thetaTrace], interval=h, blit=True)
-        anim5 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, omega1, omegaTrace], interval=h, blit=True)
+        anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, thetaTrace], interval=h, blit=True)
+        anim5 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, omegaTrace], interval=h, blit=True)
 
 
     plt.show()
