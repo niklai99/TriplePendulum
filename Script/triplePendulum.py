@@ -15,7 +15,8 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from matplotlib import animation
 
-from rungeKutta4 import rk4
+from rungeKutta4 import RungeKutta4
+from equationsMotion import triplePendulumEq
 
 
 def inputParameters():
@@ -200,68 +201,7 @@ def triplePendulum():
     print('\nDigita 0 per visualizzare grafici statici\nDigita 1 per visualizzare grafici animati\n')
     mode = int(input(''))
 
-    #q[0] = theta0
-    #q[1] = omega0
-    #q[2] = theta1
-    #q[3] = omega1
-    #q[4] = theta2
-    #q[5] = omega2
-    def motion(q, t):
-        '''Equazione del Moto'''
-
-        m01 = m1 + m2
-        m02 = m1 + m3
-        m12 = m2 + m3
-        m012 = m1 + m2 + m3
-        mf = m012/4
-
-        cos0 = np.cos(q[0])
-        cos1 = np.cos(q[2])
-        cos2 = np.cos(q[4])
-        sin0 = np.sin(q[0])
-        sin1 = np.sin(q[2])
-        sin2 = np.sin(q[4])
-
-        cos01 = np.cos(q[0]-q[2])
-        cos02 = np.cos(q[0]-q[4])
-        cos12 = np.cos(q[2]-q[4])
-        sin01 = np.sin(q[0]-q[2])
-        sin02 = np.sin(q[0]-q[4])
-        sin12 = np.sin(q[2]-q[4])
-
-        r1 = m12*cos01*cos02 - m012*cos12
-        r2 = m012 - m12*(cos01)**2
-        r3 = -m012 + m3*(cos02)**2
-
-        od1_1 = 4*m3*m12
-        od1_2 = r1*cos01 + r2*cos02
-        od1_3 = -g*sin2 + l1*sin02*q[1]**2 + l2*sin12*q[3]**2
-        od1_4 = -g*m2*sin1 - g*m3*sin1 + l1*m2*sin01*q[1]**2 + l1*m3*sin01*q[1]**2 - l3*m3*sin12*q[5]**2
-        od1_5 = -m3*m12*( -cos02 + np.cos(q[0]-2*q[2]+q[4]) )**2 * m012
-        od1_6 = g*m1*sin0 + g*m2*sin0 + g*m3*sin0 + l2*m2*sin01*q[3]**2 + l2*m3*sin01*q[3]**2 + l3*m3*sin02*q[5]**2
-        od1_7 = m3*r1**2 + m12*r3*r2
-
-        od2_1 = -g*sin2 + l1*sin02*q[1]**2 + l2*sin12*q[3]**2
-        od2_2 = g*m1*sin0 + g*m2*sin0 + g*m3*sin0 + l2*m2*sin01*q[3]**2 + l2*m3*sin01*q[3]**2 + l3*m3*sin02*q[5]**2
-        od2_3 = -g*m2*sin1 - g*m3*sin1 + l1*m2*sin01*q[1]**2 + l1*m3*sin01*q[1]**2 - l3*m3*sin12*q[5]**2
-
-        od3_1 = g*m1*sin0 + g*m2*sin0 + g*m3*sin0 + l2*m2*sin01*q[3]**2 + l2*m3*sin01*q[3]**2 + l3*m3*sin02*q[5]**2
-        od3_2 = -g*sin2 + l1*sin02*q[1]**2 + l2*sin12*q[3]**2
-        od3_3 = g*m2*sin1 + g*m3*sin1 - l1*m2*sin01*q[1]**2 - l1*m3*sin01*q[1]**2 + l3*m3*sin12*q[5]**2
-
-
-        td1 = q[1]
-        td2 = q[3]
-        td3 = q[5]
-
-        od1 = mf * ( od1_1 * od1_2 * od1_3 * r2 - 4 * ( -m3 * od1_2 * r1 + ( m3 * r1**2 + m12 * r3 * r2 ) * cos01 ) * od1_4 - ( od1_5 + 4*m3*r1**2 + 4*m12*r3*r2 ) * od1_6 ) / ( l1 * od1_7 * m012 * r2)
-        od2 = ( -m3 * r1 * m012 * od2_1 * r2 - ( m3 * ( r1*cos01 + r2*cos02 ) * r1 - ( m3*r1**2 + m12*r3*r2 ) * cos01 ) * od2_2 + m012*r3*r2*od2_3 ) / ( l2 * od1_7 * r2 )
-        od3 = -( m12 * (od1_2) * (od3_1) + m12 * m012 * (od3_2) * r2 - r1*m012 * od3_3 ) / ( l3 * ( m3*r1**2 + m12*r3*r2 ) )
-
-        return np.array([td1, od1, td2, od2, td3, od3])
-
-
-    q, t = rk4(motion, q0, t0 , tf , nstep)
+    q, t = RungeKutta4(triplePendulumEq, par)
 
     E, U, T = computeEnergy(q, par)
 

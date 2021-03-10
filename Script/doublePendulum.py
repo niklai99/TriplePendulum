@@ -15,7 +15,8 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from matplotlib import animation
 
-from rungeKutta4 import rk4
+from rungeKutta4 import RungeKutta4
+from equationsMotion import doublePendulumEq
 
 def inputParameters():
     '''Read parameters from keyboard'''
@@ -177,21 +178,7 @@ def doublePendulum():
     print('\nDigita 0 per visualizzare grafici statici\nDigita 1 per visualizzare grafici animati\n')
     mode = int(input(''))
 
-    #q[0] = theta1
-    #q[1] = omega1
-    #q[2] = theta2
-    #q[3] = omega2
-    def motion(q, t):
-        '''Equazione del Moto'''
-
-        td1 = q[1]
-        td2 = q[3]
-        od1 = (-g * (2*m1 + m2) * np.sin(q[0]) -m2 * g * np.sin(q[0]-2*q[2]) -2 * np.sin(q[0]-q[2]) * m2 * (l2 * q[3]**2 + l1 * q[1]**2 * np.cos(q[0]-q[2]))) / (l1 * (2*m1 + m2 - m2*np.cos(2*q[0]-2*q[2])))
-        od2 = (2 * np.sin(q[0]-q[2]) * ( l1 * q[1]**2 * (m1+m2) + g * (m1+m2) * np.cos(q[0]) + m2 * l2 * q[3]**2 * np.cos(q[0]-q[2]))) / (l2 * (2*m1 + m2 - m2*np.cos(2*q[0]-2*q[2])))
-        return np.array([td1, od1, td2, od2])
-
-
-    q, t = rk4(motion, q0, t0 , tf , nstep)
+    q, t = RungeKutta4(doublePendulumEq, par)
 
     E, U, T = computeEnergy(q, par)
 
