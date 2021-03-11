@@ -85,6 +85,8 @@ def figureSetup(t1, t2, o1, o2, par):
     ax1.set_title('Pendulum Trajectory')
     ax2.set_title('\u03B8 trend over time')
     ax3.set_title('\u03C9 trend over time')
+    ax4.set_title(r'E$_k$')
+    ax5.set_title(r'E$_p$')
 
     ax1.set_xlabel('x coordinate (m)')
     ax1.set_ylabel('y coordinate (m)')
