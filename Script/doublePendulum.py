@@ -19,20 +19,7 @@ from rungeKutta4 import RungeKutta4
 from equationsMotion import doublePendulumEq
 from inputParameters import inputParameters
 from computeEnergy import doublePendulumEnergy
-
-
-def computeCoordinates(t1, t2, par):
-    '''Computes cartesian coordinates from generalized coordinates'''
-
-    l1 = par[2]
-    l2 = par[3]
-    
-    x1 = +l1*np.sin(t1)
-    y1 = -l1*np.cos(t1)
-    x2 = +l2*np.sin(t2) + x1
-    y2 = -l2*np.cos(t2) + y1
-
-    return x1, y1, x2, y2
+from computeCoordinates import computeCoordinates
 
 
 def figureSetup(t1, t2, o1, o2, par):
@@ -146,15 +133,15 @@ def doublePendulum(n):
     t1, o1, t2, o2 = q.T
 
 
-    x1, y1, x2, y2 = computeCoordinates(t1, t2, par)
+    x, y = computeCoordinates(n, q, par)
 
     fig1, ax1, ax2, ax3, ax4, ax5 = figureSetup(t1, t2, o1, o2, par)
     
     # static plots
     if mode == 0:
 
-        ax1.plot(x1, y1, '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
-        ax1.plot(x2, y2, '-', lw=2, color = '#FF4B00', label = '2nd mass trajectory') 
+        ax1.plot(x[:,0], y[:,0], '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
+        ax1.plot(x[:,1], y[:,1], '-', lw=2, color = '#FF4B00', label = '2nd mass trajectory') 
         ax2.plot(t, t1, '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
         ax2.plot(t, t2, '-', lw=2, color = '#FF4B00', label = '2nd mass \u03B8(t)')
         ax3.plot(t, o1, '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)') 
@@ -210,10 +197,10 @@ def doublePendulum(n):
         ax5.add_patch(rect2)
 
 
-        def animate(i, x1, y1, x2, y2, line1, line2):
+        def animate(i, t, y1, y2, line1, line2):
 
-            line1.set_data(x1[:i], y1[:i])
-            line2.set_data(x2[:i], y2[:i])
+            line1.set_data(t[:i], y1[:i])
+            line2.set_data(t[:i], y2[:i])
 
             return line1, line2,
         
@@ -229,21 +216,20 @@ def doublePendulum(n):
 
             return rect2,
 
-        def pendulum(i, x1, y1, x2, y2, trace1, trace2, masses, segments):
+        def pendulum(i, x, y, trace1, trace2, masses, segments):
 
             massX0 = [0]
             massY0 = [0]
-            massX1 = [x1[i]]
-            massY1 = [y1[i]]
-            massX2 = [x2[i]]
-            massY2 = [y2[i]]
+            massX1 = [x[i, 0]]
+            massY1 = [y[i, 0]]
+            massX2 = [x[i, 1]]
+            massY2 = [y[i, 1]]
 
-            segmentX = [0, x1[i], x2[i]]
-            segmentY = [0, y1[i], y2[i]]
+            segmentX = [0, x[i, 0], x[i, 1]]
+            segmentY = [0, y[i, 0], y[i, 1]]
 
-            trace1.set_data(x1[i-25:i], y1[i-25:i])
-            trace2.set_data(x2[i-40:i], y2[i-40:i])
-
+            trace1.set_data(x[i-25:i, 0], y[i-25:i, 0])
+            trace2.set_data(x[i-40:i, 1], y[i-40:i, 1])
             mass0, mass1, mass2 = masses
 
             mass0.set_data(massX0, massY0)
@@ -260,11 +246,11 @@ def doublePendulum(n):
 
             return trace1, trace2, mass0, mass1, mass2, segments, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
 
-        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, x2, y2, pendulumTrace1, pendulumTrace2, masses, pendulumSegments], interval=h, blit=True)
+        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x, y, pendulumTrace1, pendulumTrace2, masses, pendulumSegments], interval=h, blit=True)
         anim2 = animation.FuncAnimation(fig1, kineticEnergy_anim, frames=len(t), fargs=[ax4], interval=h, blit=True)
         anim3 = animation.FuncAnimation(fig1, potentialEnergy_anim, frames=len(t), fargs=[ax5], interval=h, blit=True)
-        anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, t, t2, thetaTrace1, thetaTrace2], interval=h, blit=True)
-        anim5 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, t, o2, omegaTrace1, omegaTrace2], interval=h, blit=True)
+        anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, t2, thetaTrace1, thetaTrace2], interval=h, blit=True)
+        anim5 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, o1, o2, omegaTrace1, omegaTrace2], interval=h, blit=True)
 
 
     plt.show()

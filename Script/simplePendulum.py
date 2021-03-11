@@ -28,78 +28,8 @@ from rungeKutta4 import RungeKutta4
 from equationsMotion import simplePendulumEq
 from inputParameters import inputParameters
 from computeEnergy import simplePendulumEnergy
-
-
-def computeCoordinates(t1, par):
-    '''Computes cartesian coordinates from generalized coordinates'''
-
-    l1 = par[1]
-
-    x1 = +l1*np.sin(t1)
-    y1 = -l1*np.cos(t1)
-    return x1, y1
-
-def figureSetup(t1, o1, par):
-    '''Plot figure configuration'''
-
-    l1 = par[1]
-    t0 = par[3]
-    tf = par[4]
-
-    t1Min = np.amin(t1)
-    t1Max = np.amax(t1)
-
-    o1Min = np.amin(o1)
-    o1Max = np.amax(o1)
-
-    varT = (t1Max - t1Min) / 2
-    varO = (o1Max - o1Min) / 2
-
-    fig1 = plt.figure(figsize=(16, 6))
-    gs = fig1.add_gridspec(9, 35)
-
-    ax1 = fig1.add_subplot(gs[:, 20:-2])
-    ax2 = fig1.add_subplot(gs[0:4, 0:17])
-    ax3 = fig1.add_subplot(gs[5:9, 0:17])
-    ax4 = fig1.add_subplot(gs[:, -2:-1])
-    ax5 = fig1.add_subplot(gs[:, -1:])
-
-    ax1.set_xlim(-(l1 + l1/5), l1 + l1/5)
-    ax1.set_ylim(-(l1 + l1/5), l1 + l1/5)
-
-    ax2.set_xlim(t0, tf)
-    ax2.set_ylim(t1Min - varT, t1Max + varT)
-
-    ax3.set_xlim(t0, tf)
-    ax3.set_ylim(o1Min - varO, o1Max + varO)
-
-    ax1.set_title('Pendulum Trajectory')
-    ax2.set_title('\u03B8 trend over time')
-    ax3.set_title('\u03C9 trend over time')
-    ax4.set_title(r'E$_k$')
-    ax5.set_title(r'E$_p$')
-
-    ax1.set_xlabel('x coordinate (m)')
-    ax1.set_ylabel('y coordinate (m)')
-
-    ax2.set_xlabel('time (s)', loc = 'right')
-    ax2.set_ylabel('\u03B8 (rad)', loc = 'top')
-
-    ax3.set_xlabel('time (s)', loc = 'right')
-    ax3.set_ylabel('\u03C9 (rad/s)', loc = 'top')
-
-    ax4.axes.xaxis.set_ticks([])
-    ax4.axes.yaxis.set_ticks([])
-    ax4.yaxis.set_label_position("right")
-    #ax4.set_ylabel('kinetic energy', rotation = 270, labelpad = 15)
-
-    ax5.axes.xaxis.set_ticks([])
-    ax5.axes.yaxis.set_ticks([])
-    ax5.yaxis.set_label_position("right")
-    #ax5.set_ylabel('potential energy', rotation = 270, labelpad = 15)
-
-    return fig1, ax1, ax2, ax3, ax4, ax5
-
+from figureSetup import figureSetup
+from computeCoordinates import computeCoordinates
 
 
 def simplePendulum(n):
@@ -117,7 +47,7 @@ def simplePendulum(n):
         tf = 10
         nstep = 1000
         par = [m1, l1, q0, t0, tf, nstep]
-        print(par)
+        
     
     elif choice == 's':
         par = inputParameters(n)
@@ -136,7 +66,7 @@ def simplePendulum(n):
     h = t[1]-t[0]
     t1, o1 = q.T
 
-    x1, y1 = computeCoordinates(t1, par)
+    x, y = computeCoordinates(n, q, par)
 
 
     fig1, ax1, ax2, ax3, ax4, ax5 = figureSetup(t1, o1, par)
@@ -144,7 +74,7 @@ def simplePendulum(n):
     # static plots
     if mode == 0:
 
-        ax1.plot(x1, y1, '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
+        ax1.plot(x, y, '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
         ax2.plot(t, t1, '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
         ax3.plot(t, o1, '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
         ax1.legend(loc = 'upper right')
@@ -216,8 +146,8 @@ def simplePendulum(n):
     
             massX0 = [0]
             massY0 = [0]
-            massX1 = [x1[i]]
-            massY1 = [y1[i]]
+            massX1 = [x[i]]
+            massY1 = [y[i]]
             
             segmentX = [0, x[i]]
             segmentY = [0, y[i]]
@@ -240,7 +170,7 @@ def simplePendulum(n):
             return trace, mass0, mass1, segments, time_text, totalEnergy_text, kineticEnergy_text, potentialEnergy_text,
 
 
-        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x1, y1, pendulumTrace, masses, pendulumSegment], interval=h, blit=True)
+        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x, y, pendulumTrace, masses, pendulumSegment], interval=h, blit=True)
         anim2 = animation.FuncAnimation(fig1, kineticEnergy_anim, frames=len(t), fargs=[ax4], interval=h, blit=True)
         anim3 = animation.FuncAnimation(fig1, potentialEnergy_anim, frames=len(t), fargs=[ax5], interval=h, blit=True)
         anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, t1, thetaTrace], interval=h, blit=True)
