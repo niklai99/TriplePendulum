@@ -1,6 +1,7 @@
 # TO DO
 
 # creare un modulo "figureSetup" e dividere i casi in cui i grafici siano statici o animati
+# funziona solo per siglePendulum
 
 # se possibile creare un modulo, o almeno una funzione separata, per gestire le animazioni
 
