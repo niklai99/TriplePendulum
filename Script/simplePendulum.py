@@ -28,7 +28,7 @@ from rungeKutta4 import RungeKutta4
 from equationsMotion import simplePendulumEq
 from inputParameters import inputParameters
 from computeEnergy import simplePendulumEnergy
-from figureSetup import figureSetup
+from figureSetup import staticFigure, animatedFigure
 from computeCoordinates import computeCoordinates
 
 
@@ -69,10 +69,12 @@ def simplePendulum(n):
     x, y = computeCoordinates(n, q, par)
 
 
-    fig1, ax1, ax2, ax3, ax4, ax5 = figureSetup(t1, o1, par)
+    
 
     # static plots
     if mode == 0:
+
+        fig1, ax1, ax2, ax3 = staticFigure(t1, o1, par)
 
         ax1.plot(x, y, '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
         ax2.plot(t, t1, '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
@@ -83,6 +85,8 @@ def simplePendulum(n):
 
     # animated plots
     elif mode == 1:
+
+        fig1, ax1, ax2, ax3, ax4, ax5 = animatedFigure(t1, o1, par)
 
         pendulumMass0, = ax1.plot([], [], 'o', color = '#000000', markersize = 5)
         pendulumMass1, = ax1.plot([], [], 'o', color = '#000000', markersize = 5+m1)
