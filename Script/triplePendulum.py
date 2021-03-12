@@ -31,7 +31,8 @@ def triplePendulum(n):
     print('\nYou chose the Triple Pendulum')
 
 
-    print('Insert "d" to choose default parameters\nInsert "s" to input your parameters')
+    print('Insert "d" to choose default parameters\n')
+    print('Insert "s" to input your parameters\n')
     choice = str(input(''))
 
     if choice == 'd':
@@ -63,7 +64,8 @@ def triplePendulum(n):
     x, y = computeCoordinates(n, q, par)
 
 
-    print('\nInsert 0 for static plots\nInsert 1 to see animations\n')
+    print('\nInsert 0 for static plots')
+    print('Insert 1 to see animations\n')
     mode = int(input(''))
 
     # static plots

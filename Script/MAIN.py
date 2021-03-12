@@ -28,19 +28,19 @@ def main():
     print('\nInsert 3 for the Triple Pendulum')
 
     try:
-        mode=int(input('\n'))
+        n=int(input('\n'))
     except ValueError:
         print('\nMust be a number')
 
 
-    if mode == 1:
-        simplePendulum(mode)
+    if n == 1:
+        simplePendulum(n)
     
-    elif mode == 2:
-        doublePendulum(mode)
+    elif n == 2:
+        doublePendulum(n)
 
-    elif mode == 3:
-        triplePendulum(mode)
+    elif n == 3:
+        triplePendulum(n)
 
     else:
         print('Not supported')
