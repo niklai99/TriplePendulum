@@ -33,4 +33,4 @@ def RungeKutta4(f, par):
         k4 = h * f(q[i] + k3, t[i] + h, par)
         q[i+1] = q[i] + (k1 + 2*(k2 + k3) + k4) / 6
 
-    return q, t
+    return q, t, h
