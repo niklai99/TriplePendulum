@@ -23,12 +23,12 @@ from triplePendulum import triplePendulum
 def main():
     '''Main Function'''
     
-    print('\nPremi 1 per il Pendolo Semplice')
-    print('\nPremi 2 per il Pendolo Doppio')
-    print('\nPremi 3 per il Pendolo Triplo')
+    print('\nInsert 1 for the Simple Pendulum')
+    print('\nInsert 2 for the Double Pendulum')
+    print('\nInsert 3 for the Triple Pendulum')
 
     try:
-        mode=int(input('\n\nInserisci la tua scelta: '))
+        mode=int(input('\n'))
     except ValueError:
         print('\nMust be a number')
 
@@ -43,7 +43,7 @@ def main():
         triplePendulum(mode)
 
     else:
-        print('Opzione non supportata')
+        print('Not supported')
 
 
 if __name__ == "__main__":

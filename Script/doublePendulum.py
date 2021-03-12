@@ -27,9 +27,9 @@ from animationModule import doublePendulumTrend, kineticEnergyAnimation, potenti
 
 def doublePendulum(n):
     '''Pendolo Doppio'''
-    print('\nHai scelto il pendolo doppio')
+    print('\nYou chose the Double Pendulum')
 
-    print('Premi "d" per parametri default\nPremi "s" per scegliere i parametri')
+    print('Insert "d" to choose default parameters\nInsert "s" to input your parameters')
     choice = str(input(''))
 
     if choice == 'd':
@@ -58,7 +58,7 @@ def doublePendulum(n):
     x, y = computeCoordinates(n, q, par)
 
 
-    print('\nDigita 0 per visualizzare grafici statici\nDigita 1 per visualizzare grafici animati\n')
+    print('\Insert 0 for static plots\nInsert 1 to see animations\n')
     mode = int(input(''))
     
     # static plots

@@ -28,10 +28,10 @@ from animationModule import triplePendulumTrend, kineticEnergyAnimation, potenti
 
 def triplePendulum(n):
     '''Pendolo Triplo'''
-    print('\nHai scelto il pendolo triplo')
+    print('\nYou chose the Triple Pendulum')
 
 
-    print('Premi "d" per parametri default\nPremi "s" per scegliere i parametri')
+    print('Insert "d" to choose default parameters\nInsert "s" to input your parameters')
     choice = str(input(''))
 
     if choice == 'd':
@@ -63,7 +63,7 @@ def triplePendulum(n):
     x, y = computeCoordinates(n, q, par)
 
 
-    print('\nDigita 0 per visualizzare grafici statici\nDigita 1 per visualizzare grafici animati\n')
+    print('\Insert 0 for static plots\nInsert 1 to see animations\n')
     mode = int(input(''))
 
     # static plots
