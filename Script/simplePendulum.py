@@ -54,7 +54,7 @@ def simplePendulum(n):
     x, y = computeCoordinates(n, q, par)
 
 
-    print('\Insert 0 for static plots\nInsert 1 to see animations\n')
+    print('\nInsert 0 for static plots\nInsert 1 to see animations\n')
     mode = int(input(''))
     
     # static plots
