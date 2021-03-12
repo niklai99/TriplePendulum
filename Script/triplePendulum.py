@@ -19,8 +19,9 @@ from rungeKutta4 import RungeKutta4
 from equationsMotion import triplePendulumEq
 from inputParameters import inputParameters
 from computeEnergy import triplePendulumEnergy
-from figureSetup import staticFigure, animatedFigure
+from figureSetup import staticFigure, animatedFigure, addLegend
 from computeCoordinates import computeCoordinates
+from animationModule import triplePendulumTrend, kineticEnergyAnimation, potentialEnergyAnimation, triplePendulumAnimation
 
 
 
@@ -68,8 +69,8 @@ def triplePendulum(n):
     # static plots
     if mode == 0:
 
-        fig1, ax1, ax2, ax3 = staticFigure(n, q, par)
-        
+        fig, ax1, ax2, ax3 = staticFigure(n, q, par)
+
         ax1.plot(x[:,0], y[:,0], '-', lw=2, color = '#047FFF', label = '1st mass trajectory') 
         ax1.plot(x[:,1], y[:,1], '-', lw=2, color = '#FF4B00', label = '2nd mass trajectory')
         ax1.plot(x[:,2], y[:,2], '-', lw=2, color = '#00C415', label = '3rd mass trajectory') 
@@ -82,15 +83,13 @@ def triplePendulum(n):
         ax3.plot(t, q[:,3], '-', lw=2, color = '#FF4B00', label = '2nd mass \u03C9(t)')
         ax3.plot(t, q[:,5], '-', lw=2, color = '#00C415', label = '3rd mass \u03C9(t)')
 
-        ax1.legend(loc = 'upper right', ncol = 1)
-        ax2.legend(loc = 'upper right', ncol = 3)
-        ax3.legend(loc = 'upper right', ncol = 3)
+        addLegend(n, ax1, ax2, ax3)
 
 
     # animated plots
     elif mode == 1:
 
-        fig1, ax1, ax2, ax3, ax4, ax5 = animatedFigure(n, q, par)
+        fig, ax1, ax2, ax3, ax4, ax5 = animatedFigure(n, q, par)
 
         pendulumMass0, = ax1.plot([], [], 'o', color = '#000000', markersize = 5)
         pendulumMass1, = ax1.plot([], [], 'o', color = '#000000', markersize = 5+m1)
@@ -103,18 +102,19 @@ def triplePendulum(n):
         pendulumTrace1, = ax1.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass trajectory')
         pendulumTrace2, = ax1.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass trajectory')
         pendulumTrace3, = ax1.plot([], [], '-', lw=2, color = '#00C415', label = '3rd mass trajectory')
+        pendulumTraces = [pendulumTrace1, pendulumTrace2, pendulumTrace3]
 
         thetaTrace1, = ax2.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03B8(t)')
         thetaTrace2, = ax2.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass \u03B8(t)')
         thetaTrace3, = ax2.plot([], [], '-', lw=2, color = '#00C415', label = '3rd mass \u03B8(t)')
+        thetaTraces = [thetaTrace1, thetaTrace2, thetaTrace3]
 
         omegaTrace1, = ax3.plot([], [], '-', lw=2, color = '#047FFF', label = '1st mass \u03C9(t)')
         omegaTrace2, = ax3.plot([], [], '-', lw=2, color = '#FF4B00', label = '2nd mass \u03C9(t)')
         omegaTrace3, = ax3.plot([], [], '-', lw=2, color = '#00C415', label = '3rd mass \u03C9(t)')
+        omegaTraces = [omegaTrace1, omegaTrace2, omegaTrace3]
 
-        ax1.legend(loc = 'upper right', ncol = 1)
-        ax2.legend(loc = 'upper right', ncol = 3)
-        ax3.legend(loc = 'upper right', ncol = 3)
+        addLegend(n, ax1, ax2, ax3)
 
         time_template = 'time = %.1fs'
         time_text = ax1.text(0.05, 0.95, '', transform=ax1.transAxes, weight = 'bold')
@@ -122,72 +122,20 @@ def triplePendulum(n):
         totalEnergy_template = 'total energy = %.2f J'
         totalEnergy_text = ax1.text(0.05, 0.87, '', transform=ax1.transAxes)
 
+        texts = [time_template, time_text, totalEnergy_template, totalEnergy_text]
+
         rect1 = plt.Rectangle((0, -1), 1, 1, fill=True, color='white', ec='black')
         ax4.add_patch(rect1)
 
         rect2 = plt.Rectangle((0, -1), 1, 1, fill=True, color='white', ec='black')
         ax5.add_patch(rect2)
 
-
-        def animate(i, t, y1, y2, y3, line1, line2, line3):
-
-            line1.set_data(t[:i], y1[:i])
-            line2.set_data(t[:i], y2[:i])
-            line3.set_data(t[:i], y3[:i])
-
-            return line1, line2, line3,
-
-        def kineticEnergy_anim(i, ax):
-
-            rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'red')
-
-            return rect1,
-        
-        def potentialEnergy_anim(i, ax):
-
-            rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'blue')
-
-            return rect2,
-
-        def pendulum(i, x, y, trace1, trace2, trace3, masses, segments):
-
-            massX0 = [0]
-            massY0 = [0]
-            massX1 = [x[i, 0]]
-            massY1 = [y[i, 0]]
-            massX2 = [x[i, 1]]
-            massY2 = [y[i, 1]]
-            massX3 = [x[i, 2]]
-            massY3 = [y[i, 2]]
-
-            segmentX = [0, x[i, 0], x[i, 1], x[i, 2]]
-            segmentY = [0, y[i, 0], y[i, 1], y[i, 2]]
-
-            trace1.set_data(x[i-25:i, 0], y[i-25:i, 0])
-            trace2.set_data(x[i-40:i, 1], y[i-40:i, 1])
-            trace3.set_data(x[i-65:i, 2], y[i-65:i, 2])
-
-            mass0, mass1, mass2, mass3 = masses
-
-            mass0.set_data(massX0, massY0)
-            mass1.set_data(massX1, massY1)
-            mass2.set_data(massX2, massY2)
-            mass3.set_data(massX3, massY3)
-
-            segments.set_data(segmentX, segmentY)
-
-            time_text.set_text(time_template % (i*h))
-
-            totalEnergy_text.set_text(totalEnergy_template % (T[i]))
-
-            return trace1, trace2, trace3, mass0, mass1, mass2, mass3, segments, time_text, totalEnergy_text,
-
     
-        anim1 = animation.FuncAnimation(fig1, pendulum, frames=len(t), fargs=[x, y, pendulumTrace1, pendulumTrace2, pendulumTrace3, masses, pendulumSegments], interval=h, blit=True)
-        anim2 = animation.FuncAnimation(fig1, kineticEnergy_anim, frames=len(t), fargs=[ax4], interval=h, blit=True)
-        anim3 = animation.FuncAnimation(fig1, potentialEnergy_anim, frames=len(t), fargs=[ax5], interval=h, blit=True)
-        anim4 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, q[:,0], q[:,2], q[:,4], thetaTrace1, thetaTrace2, thetaTrace3], interval=h, blit=True)
-        anim5 = animation.FuncAnimation(fig1, animate, frames=len(t), fargs=[t, q[:,1], q[:,3], q[:,5], omegaTrace1, omegaTrace2, omegaTrace3], interval=h, blit=True)
+        anim1 = animation.FuncAnimation(fig, triplePendulumAnimation, frames=len(t), fargs=[x, y, pendulumTraces, masses, pendulumSegments, texts, T, h], interval=h, blit=True)
+        anim2 = animation.FuncAnimation(fig, kineticEnergyAnimation, frames=len(t), fargs=[ax4, E, U], interval=h, blit=True)
+        anim3 = animation.FuncAnimation(fig, potentialEnergyAnimation, frames=len(t), fargs=[ax5, E, U], interval=h, blit=True)
+        anim4 = animation.FuncAnimation(fig, triplePendulumTrend, frames=len(t), fargs=['theta', t, q, thetaTraces], interval=h, blit=True)
+        anim5 = animation.FuncAnimation(fig, triplePendulumTrend, frames=len(t), fargs=['omega', t, q, omegaTraces], interval=h, blit=True)
 
 
     plt.show()

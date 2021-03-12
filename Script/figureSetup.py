@@ -248,3 +248,8 @@ def animatedFigure(n, q, par):
     return fig, ax1, ax2, ax3, ax4, ax5
 
 
+def addLegend(n, ax1, ax2, ax3):
+    ax1.legend(loc = 'upper right', ncol = 1)
+    ax2.legend(loc = 'upper right', ncol = n)
+    ax3.legend(loc = 'upper right', ncol = n)
+    return
