@@ -45,6 +45,52 @@ and follow the instructions given.
     1. Static figures
     2. Animated figures
 
+## Modules
+
+### [MAIN.py](./MAIN.py)
+
+coming soon...
+
+### [inputParameters.py](./inputParameters.py)
+
+coming soon...
+
+### [equationsMotion.py](./equationsMotion.py)
+
+coming soon...
+
+### [rungeKutta4.py](./rungeKutta4.py)
+
+coming soon...
+
+### [computeCoordinates.py](./computeCoordinates.py)
+
+coming soon...
+
+### [computeEnergy.py](./computeEnergy.py)
+
+coming soon...
+
+### [figureSetup.py](./figureSetup.py)
+
+coming soon...
+
+### [animationModule.py](./animationModule.py)
+
+coming soon...
+
+### [simplePendulum.py](./simplePendulum.py)
+
+coming soon...
+
+### [doublePendulum.py](./doublePendulum.py)
+
+coming soon...
+
+### [triplePendulum.py](./triplePendulum.py)
+
+coming soon...
+
 ## Figures
 
 ### Simple Pendulum
@@ -77,4 +123,3 @@ and follow the instructions given.
   
     ![triplePendulum_default_anim](./Pictures/triplePendulum/triplePendulum_default_anim.png)
 
-## Modules
