@@ -2,13 +2,25 @@
 
 The idea behind this script is to give the user a fully customizable system.
 
-1. The user can choose whether to work with a
+## Run the Script
+
+To run the script, simply run the [MAIN.py](./MAIN.py) module 
+
+```
+$ python MAIN.py
+```
+
+and follow the instructions given.
+
+## User's choice
+
+* The user can choose whether to work with a
 
    1. Simple Pendulum
    2. Double Pendulum
    3. Triple Pendulum
 
-2. The user can choose wheter to insert values for
+* The user can choose wheter to insert values for
 
     1. Masses of the points
     2. Lengths of the ropes
@@ -28,7 +40,10 @@ The idea behind this script is to give the user a fully customizable system.
     6. Ending time equals to 10s
     7. Number of iterations equals to 1000
 
-3. The user can also choose whether to plot
+* The user can also choose whether to plot
    
-   1. Static figures
-   2. Animated figures
+    1. Static figures
+    2. Animated figures
+
+## Features
+
