@@ -20,7 +20,7 @@ and follow the instructions given.
    2. Double Pendulum
    3. Triple Pendulum
 
-* The user can choose wheter to insert values for
+* The user can choose whether to insert values for
 
     1. Masses of the points
     2. Lengths of the ropes
