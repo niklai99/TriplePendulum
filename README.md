@@ -4,9 +4,9 @@ The main goal of this computational physics project is to numerically solve the 
 
 ## Script Folder
 
-In the [Script](./Script/) folder you can find a few modules meant to achieve the main goal using the Runge-Kutta 4 iterative method. 
+The [Script](./Script/) folder contains the main line of attack onto solving the problem this project is all about. In the script code, the RungeKutta 4 iterative method is used to integrate the equations of motion of a system, that could be a simple pendulum, a double pendulum or a triple pendulum. The idea behind the writing of this script is to try give the user a fully customizable system! 
 
-More details in the [Script](./Script/) folder!
+More details, such as features, modules explaination and figures, in the [Script](./Script/) folder!
 
 To run the script, simply run the [MAIN.py](./Script/MAIN.py) module and follow the instructions given.
 
