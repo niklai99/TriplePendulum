@@ -28,7 +28,7 @@ from animationModule import doublePendulumTrend, kineticEnergyAnimation, potenti
 
 def doublePendulum(n):
     '''Double pendulum integration and animation'''
-    print('\nYou chose the Double Pendulum')
+    print('\nYou chose the Double Pendulum\n')
 
     # Let the user decide whether to use deafult parameters or to insert custom parameters
     print('Insert "d" to choose default parameters\n')

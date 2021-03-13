@@ -28,7 +28,7 @@ from animationModule import triplePendulumTrend, kineticEnergyAnimation, potenti
 
 def triplePendulum(n):
     '''Triple pendulum integration and animation'''
-    print('\nYou chose the Triple Pendulum')
+    print('\nYou chose the Triple Pendulum\n')
 
      # Let the user decide whether to use deafult parameters or to insert custom parameters
     print('Insert "d" to choose default parameters\n')
