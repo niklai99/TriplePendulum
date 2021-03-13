@@ -12,7 +12,7 @@ $ python MAIN.py
 
 and follow the instructions given.
 
-## User's choice
+## User's Choice
 
 * The user can choose whether to work with a
 
@@ -41,9 +41,40 @@ and follow the instructions given.
     7. Number of iterations equals to 1000
 
 * The user can also choose whether to plot
-   
+
     1. Static figures
     2. Animated figures
 
-## Features
+## Figures
 
+### Simple Pendulum
+
+* **STATIC**
+
+    ![simplePendulum_default_static](./Pictures/simplePendulum/simplePendulum_default_static.png)
+
+* **ANIMATED**
+  
+    ![simplePendulum_default_anim](./Pictures/simplePendulum/simplePendulum_default_anim.png)
+
+### Double Pendulum
+
+* **STATIC**
+
+    ![doublePendulum_default_static](./Pictures/doublePendulum/doublePendulum_default_static.png)
+
+* **ANIMATED**
+  
+    ![doublePendulum_default_anim](./Pictures/doublePendulum/doublePendulum_default_anim.png)
+
+### Triple Pendulum
+
+* **STATIC**
+
+    ![triplePendulum_default_static](./Pictures/triplePendulum/triplePendulum_default_static.png)
+
+* **ANIMATED**
+  
+    ![triplePendulum_default_anim](./Pictures/triplePendulum/triplePendulum_default_anim.png)
+
+## Modules
