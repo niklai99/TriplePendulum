@@ -59,6 +59,7 @@ def simplePendulum(n):
     # Call the inputParameters() function in inputParameters.py module
     elif choice == 's':
         par = inputParameters(n)
+        m1, l1, q0, t0, tf, nstep = par
 
     # Integrate the equation of motion using the RungeKutta4() function in rungeKutta4.py module
     # Arguments passed to the function are:
