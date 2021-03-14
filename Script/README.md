@@ -51,7 +51,7 @@ and follow the instructions given.
 
 The [MAIN.py](./MAIN.py) module contains the _main()_ function. It enables the user to choose between the simple, double and triple pendulum system
 
-```{.python}
+```python
 # Read input from keyboard
 try:
     n=int(input('\n'))
@@ -61,7 +61,7 @@ except ValueError:
 
 and then, depending on the input number, it enters the appropriate function
 
-```{.python}
+```python
 # Enter the appropriate function
 if n == 1:
     simplePendulum(n)
@@ -82,7 +82,7 @@ The [inputParameters.py](./inputParameters.py) module contains the _inputParamet
 
 Inside the _inputParameters(n)_ function, a temporary parameter array, the initial conditions array and the simulation time constraints array are filled as follows
 
-```{.python}
+```python
 # Fill the p array with masses
 for i in range(n):    
     p[i] = float(input('\nInsert mass for point %1.0f: ' % (i+1)))
@@ -106,7 +106,7 @@ simTime[2] = int(input('\nInsert number of iterations: '))
 
 Finally, a comprehensive parameter list is created and returned
 
-```{.python}
+```python
 # Create the parameters list
 par = [*p, q0, *simTime]
 
