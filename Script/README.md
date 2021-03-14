@@ -271,55 +271,101 @@ The [figureSetup.py](./figureSetup.py) module contains two functions:
 1. _staticFigure(n, q, par)_
 2. _animatedFigure(n, q, par)_
 
-The _staticFigure(n, q, par)_ deals with the settings for the static plots. 
+*   The _staticFigure(n, q, par)_ deals with the settings for the static plots. 
 
-The function, by taking as arguments the type of system _n_, the generalized coordinates _q_ and the parameters list _par_, computes automatically the best plot ranges for each static axes. For example, when dealing with a double pendulum (n = 2)
+    ```python
+    # Create the figure
+    fig = plt.figure(figsize=(14, 6))
+    # Set the figure axes grid
+    gs = fig.add_gridspec(9, 33)
 
-```python
-# Unpack the length of the ropes
-l1 = par[n]
-l2 = par[n+1]
+    # Create the axes:
+    # ax1 holds the pendulum trajectory
+    # ax2 holds the theta trend
+    # ax3 holds the omega trend
+    ax1 = fig.add_subplot(gs[:, 20:])
+    ax2 = fig.add_subplot(gs[0:4, 0:17])
+    ax3 = fig.add_subplot(gs[5:9, 0:17])
 
-# Compute the total length
-l = l1 + l2
+    # ax1 title and labels
+    ax1.set_title('Pendulum Trajectory')
+    ax1.set_xlabel('x coordinate (m)')
+    ax1.set_ylabel('y coordinate (m)')
 
-# Compute the maximum and minimum of the theta trend
-t1Min = np.amin(q[:,0])
-t2Min = np.amin(q[:,2])
-tMin = np.minimum(t1Min, t2Min)
+    # ax2 title and labels
+    ax2.set_title('\u03B8 trend over time')
+    ax2.set_xlabel('time (s)', loc = 'right')
+    ax2.set_ylabel('\u03B8 (rad)', loc = 'top')
 
-t1Max = np.amax(q[:,0])
-t2Max = np.amax(q[:,2])
-tMax = np.maximum(t1Max, t2Max)
+    # ax3 title and labels
+    ax3.set_title('\u03C9 trend over time')
+    ax3.set_xlabel('time (s)', loc = 'right')
+    ax3.set_ylabel('\u03C9 (rad/s)', loc = 'top')
+    ```
 
-# Compute the maximum and minimum of the omega trend
-o1Min = np.amin(q[:,1])
-o2Min = np.amin(q[:,3])
-oMin = np.minimum(o1Min, o2Min)
+    The function, by taking as arguments the type of system _n_, the generalized coordinates _q_ and the parameters list _par_, computes automatically the best plot ranges for each  static axes. For example, when dealing with a double pendulum
 
-o1Max = np.amax(q[:,1])
-o2Max = np.amax(q[:,3])
-oMax = np.maximum(o1Max, o2Max)
+    ```python
+    # Unpack the length of the ropes
+    l1 = par[n]
+    l2 = par[n+1]
 
-# Compute the half span of theta and omega trends
-varT = (tMax - tMin) / 2
-varO = (oMax - oMin) / 2
+    # Compute the total length
+    l = l1 + l2
 
-# Set ax1 plot range
-ax1.set_xlim(-(l + l/5), l + l/5)
-ax1.set_ylim(-(l + l/5), l + l/5)
+    # Compute the maximum and minimum of the theta trend
+    t1Min = np.amin(q[:,0])
+    t2Min = np.amin(q[:,2])
+    tMin = np.minimum(t1Min, t2Min)
 
-# Set ax2 plot range
-ax2.set_xlim(t0, tf)
-ax2.set_ylim(tMin - varT/2, tMax + varT)
+    t1Max = np.amax(q[:,0])
+    t2Max = np.amax(q[:,2])
+    tMax = np.maximum(t1Max, t2Max)
 
-# Set ax3 plot range
-ax3.set_xlim(t0, tf)
-ax3.set_ylim(oMin - varO/2, oMax + varO)
-```
+    # Compute the maximum and minimum of the omega trend
+    o1Min = np.amin(q[:,1])
+    o2Min = np.amin(q[:,3])
+    oMin = np.minimum(o1Min, o2Min)
 
-axis limits are automatically computed and the three axes, along with the figure, are returned. 
+    o1Max = np.amax(q[:,1])
+    o2Max = np.amax(q[:,3])
+    oMax = np.maximum(o1Max, o2Max)
 
+    # Compute the half span of theta and omega trends
+    varT = (tMax - tMin) / 2
+    varO = (oMax - oMin) / 2
+
+    # Set ax1 plot range
+    ax1.set_xlim(-(l + l/5), l + l/5)
+    ax1.set_ylim(-(l + l/5), l + l/5)
+
+    # Set ax2 plot range
+    ax2.set_xlim(t0, tf)
+    ax2.set_ylim(tMin - varT/2, tMax + varT)
+
+    # Set ax3 plot range
+    ax3.set_xlim(t0, tf)
+    ax3.set_ylim(oMin - varO/2, oMax + varO)
+    ```
+
+    axis limits are automatically computed and the three axes, along with the figure, are returned. 
+
+*   The _animatedFigure(n, q, par)_ deals with the settings for the animated plots. 
+
+    The structure of this function is exactly the same as the _staticFigure(n, q, par)_ one. The difference between the two is that, when dealing with animated figures, two more axes, the kinetic and potential energy bars, are created and displayed.
+
+    ```python
+    #ax4 title and labels
+    ax4.set_title(r'E$_k$')
+    ax4.axes.xaxis.set_ticks([])
+    ax4.axes.yaxis.set_ticks([])
+    
+    # ax5 title and labels
+    ax5.set_title(r'E$_p$')
+    ax5.axes.xaxis.set_ticks([])
+    ax5.axes.yaxis.set_ticks([])
+    ```
+    
 ### [animationModule.py](./animationModule.py)
 
 coming soon...
