@@ -271,6 +271,55 @@ The [figureSetup.py](./figureSetup.py) module contains two functions:
 1. _staticFigure(n, q, par)_
 2. _animatedFigure(n, q, par)_
 
+The _staticFigure(n, q, par)_ deals with the settings for the static plots. 
+
+The function, by taking as arguments the type of system _n_, the generalized coordinates _q_ and the parameters list _par_, computes automatically the best plot ranges for each static axes. For example, when dealing with a double pendulum (n = 2)
+
+```python
+# Unpack the length of the ropes
+l1 = par[n]
+l2 = par[n+1]
+
+# Compute the total length
+l = l1 + l2
+
+# Compute the maximum and minimum of the theta trend
+t1Min = np.amin(q[:,0])
+t2Min = np.amin(q[:,2])
+tMin = np.minimum(t1Min, t2Min)
+
+t1Max = np.amax(q[:,0])
+t2Max = np.amax(q[:,2])
+tMax = np.maximum(t1Max, t2Max)
+
+# Compute the maximum and minimum of the omega trend
+o1Min = np.amin(q[:,1])
+o2Min = np.amin(q[:,3])
+oMin = np.minimum(o1Min, o2Min)
+
+o1Max = np.amax(q[:,1])
+o2Max = np.amax(q[:,3])
+oMax = np.maximum(o1Max, o2Max)
+
+# Compute the half span of theta and omega trends
+varT = (tMax - tMin) / 2
+varO = (oMax - oMin) / 2
+
+# Set ax1 plot range
+ax1.set_xlim(-(l + l/5), l + l/5)
+ax1.set_ylim(-(l + l/5), l + l/5)
+
+# Set ax2 plot range
+ax2.set_xlim(t0, tf)
+ax2.set_ylim(tMin - varT/2, tMax + varT)
+
+# Set ax3 plot range
+ax3.set_xlim(t0, tf)
+ax3.set_ylim(oMin - varO/2, oMax + varO)
+```
+
+axis limits are automatically computed and the three axes, along with the figure, are returned. 
+
 ### [animationModule.py](./animationModule.py)
 
 coming soon...
