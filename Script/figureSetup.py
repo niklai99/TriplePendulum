@@ -153,7 +153,7 @@ def staticFigure(n, q, par):
 
 
 def animatedFigure(n, q, par):
-    '''Static plot figure configuration'''
+    '''Animated plot figure configuration'''
 
     # Create the figure
     fig = plt.figure(figsize=(16, 6))

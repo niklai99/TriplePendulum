@@ -152,7 +152,7 @@ In the second half of the function, the first order differential system is defin
 
 ### [rungeKutta4.py](./rungeKutta4.py)
 
-The [rungeKutta4.py](./rungeKutta4.py) module contains the _RungeKutta4(f, par)_ function
+The [rungeKutta4.py](./rungeKutta4.py) module contains the _RungeKutta4(f, par)_ function shown below.
 
 ```python
 def RungeKutta4(f, par):
@@ -188,18 +188,88 @@ def RungeKutta4(f, par):
     return q, t, h
 ```
 
+The function requires as arguments the callable function _f_, which is going to be one of the three equations of motions defined in the [equationsMotion.py](./equationsMotion.py) module, and the parameters list _par_.
+
+In the first part of the function parameters and the time serie are defined, along with the generalized coordinates solution array. 
+
+In the ending part of the function, the RungeKutta 4 iterative method is implemented to evaluate the generalized positions by numerically integrating the equations of motion.
+
+Finally, the function returns the generalized coordinates solution array _q_, the time serie _t_ and the time increment _h_.
+
 
 ### [computeCoordinates.py](./computeCoordinates.py)
 
-coming soon...
+The [computeCoordinates.py](./computeCoordinates.py) module contains the _computeCoordinates(n, q, par)_ function. 
+
+This function is used to compute cartesian _(x, y)_ coordinates from the generalized coordinates _q_. For the pendulum system the generalized coordinates _q_ are chosen to be the pendulums angle from the vertical, thus the cartesian coordinates and the generalized coordinates are connected by a sine/cosine type of relation.
+
+```python
+# If the system is the simple pendulum
+if n == 1:
+    x[0] = +par[n] * np.sin(q[:,0])
+    y[0] = -par[n] * np.cos(q[:,0])
+# If the system is the double pendulum
+elif n == 2:
+    x[0] = +par[n] * np.sin(q[:,0])
+    y[0] = -par[n] * np.cos(q[:,0])
+    x[1] = +par[n+1] * np.sin(q[:,2]) + x[0]
+    y[1] = -par[n+1] * np.cos(q[:,2]) + y[0]
+    
+# If the system is the triple pendulum
+elif n == 3:
+    x[0] = +par[n] * np.sin(q[:,0])
+    y[0] = -par[n] * np.cos(q[:,0])
+    x[1] = +par[n+1] * np.sin(q[:,2]) + x[0]
+    y[1] = -par[n+1] * np.cos(q[:,2]) + y[0]
+    x[2] = +par[n+2] * np.sin(q[:,4]) + x[1]
+    y[2] = -par[n+2] * np.cos(q[:,4]) + y[1]
+```
+
+
 
 ### [computeEnergy.py](./computeEnergy.py)
 
-coming soon...
+The [computeEnergy.py](./computeEnergy.py) module contains three functions:
+
+1. _simplePendulumEnergy(q, par)_
+2. _doublePendulumEnergy(q, par)_
+3. _triplePendulumEnergy(q, par)_
+
+Each function computes the kinetic, potential and total energy of the system at every time instant of the integration/simulation, thus returning arrays of kinetic, potential and total energy. 
+
+Since all three functions share the same structure, the _simplePendulumEnergy(q, par)_ function is taken as example.
+
+```python
+def simplePendulumEnergy(q, par):
+    '''Computes and returns total energy of the simple pendulum system'''
+
+    # Unpack the relevant parameters
+    m1 = par[0]
+    l1 = par[1]
+
+    # Unpack theta and omega from the generalized coordinates array q
+    t1, o1 = q.T
+
+    # Initialize arrays for the three energies
+    E = np.zeros(len(t1))
+    U = np.zeros(len(t1))
+    T = np.zeros(len(t1))
+
+    # Fill the energy arrays 
+    for i in range(len(t1)):
+        E[i] = 0.5 * m1 * l1**2 * o1[i]**2
+        U[i] = - m1 * 9.81 * l1*np.cos(t1[i])
+        T[i] = E[i] + U[i]
+
+    return E, U, T
+```
 
 ### [figureSetup.py](./figureSetup.py)
 
-coming soon...
+The [figureSetup.py](./figureSetup.py) module contains two functions:
+
+1. _staticFigure(n, q, par)_
+2. _animatedFigure(n, q, par)_
 
 ### [animationModule.py](./animationModule.py)
 
