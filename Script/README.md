@@ -99,7 +99,6 @@ coming soon...
 
     <img src="./Pictures/simplePendulum/simplePendulum_default_static.png" alt="simplePendulum_default_static" width="720">
 
-
 * **ANIMATED**
   
     ![simplePendulum_default_anim](./Videos/simplePendulum/Gifs/simplePendulum_default.gif)
@@ -108,7 +107,7 @@ coming soon...
 
 * **STATIC**
 
-    ![doublePendulum_default_static](./Pictures/doublePendulum/doublePendulum_default_static.png)
+    <img src="./Pictures/doublePendulum/doublePendulum_default_static.png" alt="doublePendulum_default_static" width="720">
 
 * **ANIMATED**
   
@@ -124,7 +123,7 @@ coming soon...
 
 * **STATIC**
 
-    ![triplePendulum_default_static](./Pictures/triplePendulum/triplePendulum_default_static.png)
+    <img src="./Pictures/triplePendulum/triplePendulum_default_static.png" alt="triplePendulum_default_static" width="720">
 
 * **ANIMATED**
   
