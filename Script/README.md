@@ -496,7 +496,8 @@ The [animationModule.py](./animationModule.py) module contains the animation fun
     '''Animate the kinetic energy bar'''
 
         # Fill the bar with the kinetic energy
-        rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'red')
+        rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), 
+                                color = 'red')
 
         return rect1,
 
@@ -504,14 +505,13 @@ The [animationModule.py](./animationModule.py) module contains the animation fun
     '''Animate the potential energy bar'''
 
         # Fill the bar with the potential energy
-        rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'blue')
+        rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), 
+                                color = 'blue')
 
         return rect2,
     ```
 
     They both requires the same parameters, which are indeed the iteration parameter _i_, the axes containing the bar to be updated each interation and the kinetic and potential energy arrays.
-
-
 
 ### [simplePendulum.py](./simplePendulum.py)
 
