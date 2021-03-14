@@ -118,11 +118,76 @@ The parameters list is thus in the form of [_masses_, _lengths_, _initial condit
 
 ### [equationsMotion.py](./equationsMotion.py)
 
-coming soon...
+The [equationsMotion.py](./equationsMotion.py) module contains three functions:
+
+1. _simplePendulumEq(q, t, par)_
+2. _doublePendulumEq(q, t, par)_
+3. _triplePendulumEq(q, t, par)_
+
+Each of these equations takes as arguments the generalized coordinates array _q_, the time series _t_ and the parameters list _par_. 
+
+The _simplePendulumEq(q, t, par)_ function is used here as an example, since the other two functions share the same structure.
+
+```python
+def simplePendulumEq(q, t, par):
+    '''Simple Pendulum equation of motion'''
+
+    # Define relevant parameters
+    g = 9.81
+    m1 = par[0]
+    l1 = par[1]
+
+    # ThetaDot equation
+    td = q[1]
+
+    # OmegaDot equation
+    od = -m1*(g/l1)*np.sin(q[0])
+
+    return np.array([td, od])
+```
+
+In the first half of the function, relevant parameters such as the gravitational acceleration constant, the mass of the point and the length of the rope are defined/extracted in order to be used more comfortably in the following equations.
+
+In the second half of the function, the first order differential system is defined and the array correspoding to the velocity and acceleration is returned. 
 
 ### [rungeKutta4.py](./rungeKutta4.py)
 
-coming soon...
+The [rungeKutta4.py](./rungeKutta4.py) module contains the _RungeKutta4(f, par)_ function
+
+```python
+def RungeKutta4(f, par):
+    ''' 
+        Runge-Kutta 4: the algorithm asks for the function f, 
+        which is the callable equation of motion function, 
+        and the list of parameters of the system
+    '''
+
+    # Unpack initial conditions
+    q0 = par[-4]
+
+    # Unpack time conditions and number of iterations
+    t0 = par[-3]
+    tf = par[-2]
+    n  = par[-1]
+
+    # Make the time grid
+    t = np.linspace(int(t0), int(tf), int(n)+1)
+    h = t[1]-t[0]
+
+    # Initialize the solution array
+    q = np.array((int(n)+1)*[q0])
+    
+    # Fill the solution array using the RungeKutta 4 iterative method
+    for i in range(int(n)):
+        k1 = h * f(q[i], t[i], par)
+        k2 = h * f(q[i] + 0.5 * k1, t[i] + 0.5*h, par)
+        k3 = h * f(q[i] + 0.5 * k2, t[i] + 0.5*h, par)
+        k4 = h * f(q[i] + k3, t[i] + h, par)
+        q[i+1] = q[i] + (k1 + 2*(k2 + k3) + k4) / 6
+
+    return q, t, h
+```
+
 
 ### [computeCoordinates.py](./computeCoordinates.py)
 
