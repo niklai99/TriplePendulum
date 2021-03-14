@@ -113,6 +113,8 @@ par = [*p, q0, *simTime]
 return par
 ```
 
+The parameters list is thus in the form of [_masses_, _lengths_, _initial conditions_, _time constraints_].
+
 
 ### [equationsMotion.py](./equationsMotion.py)
 
