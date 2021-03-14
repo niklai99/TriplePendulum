@@ -101,7 +101,7 @@ coming soon...
 
 * **ANIMATED**
   
-    ![simplePendulum_default_anim](./Pictures/simplePendulum/simplePendulum_default_anim.png)
+    ![simplePendulum_default_anim](./Videos/simplePendulum/Gifs/simplePendulum_default.gif)
 
 ### Double Pendulum
 
@@ -111,7 +111,13 @@ coming soon...
 
 * **ANIMATED**
   
-    ![doublePendulum_default_anim](./Pictures/doublePendulum/doublePendulum_default_anim.png)
+    ![doublePendulum_default_anim](./Videos/doublePendulum/Gifs/doublePendulum_default.gif)
+    ![doublePendulum_custom1_anim](./Videos/doublePendulum/Gifs/doublePendulum_custom1.gif)
+    ![doublePendulum_custom2_anim](./Videos/doublePendulum/Gifs/doublePendulum_custom2.gif)
+    ![doublePendulum_custom3_anim](./Videos/doublePendulum/Gifs/doublePendulum_custom3.gif)
+    ![doublePendulum_custom4_anim](./Videos/doublePendulum/Gifs/doublePendulum_custom4.gif)
+    ![doublePendulum_custom5_anim](./Videos/doublePendulum/Gifs/doublePendulum_custom5.gif)
+    ![doublePendulum_custom6_anim](./Videos/doublePendulum/Gifs/doublePendulum_custom6.gif)
 
 ### Triple Pendulum
 
@@ -121,5 +127,11 @@ coming soon...
 
 * **ANIMATED**
   
-    ![triplePendulum_default_anim](./Pictures/triplePendulum/triplePendulum_default_anim.png)
+    ![triplePendulum_default_anim](./Videos/triplePendulum/Gifs/triplePendulum_default.gif)
+    ![triplePendulum_custom1_anim](./Videos/triplePendulum/Gifs/triplePendulum_custom1.gif)
+    ![triplePendulum_custom2_anim](./Videos/triplePendulum/Gifs/triplePendulum_custom2.gif)
+    ![triplePendulum_custom3_anim](./Videos/triplePendulum/Gifs/triplePendulum_custom3.gif)
+    ![triplePendulum_custom4_anim](./Videos/triplePendulum/Gifs/triplePendulum_custom4.gif)
+    ![triplePendulum_custom5_anim](./Videos/triplePendulum/Gifs/triplePendulum_custom5.gif)
+    ![triplePendulum_custom6_anim](./Videos/triplePendulum/Gifs/triplePendulum_custom6.gif)
 
