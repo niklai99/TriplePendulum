@@ -49,7 +49,32 @@ and follow the instructions given.
 
 ### [MAIN.py](./MAIN.py)
 
-coming soon...
+The [MAIN.py](./MAIN.py) module contains the _main()_ function. It enables the user to choose between the simple, double and triple pendulum system
+
+```
+# Read input from keyboard
+try:
+    n=int(input('\n'))
+except ValueError:
+    print('\nMust be a number')
+```
+
+and then, depending on the input number, it enters the appropriate function
+
+```
+# Enter the appropriate function
+if n == 1:
+    simplePendulum(n)
+    
+elif n == 2:
+    doublePendulum(n)
+
+elif n == 3:
+    triplePendulum(n)
+
+else:
+    print('Not supported')
+```
 
 ### [inputParameters.py](./inputParameters.py)
 

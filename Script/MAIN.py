@@ -36,7 +36,7 @@ def main():
     except ValueError:
         print('\nMust be a number')
 
-    # Enter in the appropriate function
+    # Enter the appropriate function
     if n == 1:
         simplePendulum(n)
     
@@ -50,6 +50,6 @@ def main():
         print('Not supported')
 
 
-# Call the main function when running the scrip
+# Call the main function when running the script
 if __name__ == "__main__":
     main()
