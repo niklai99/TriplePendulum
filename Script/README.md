@@ -51,7 +51,7 @@ and follow the instructions given.
 
 The [MAIN.py](./MAIN.py) module contains the _main()_ function. It enables the user to choose between the simple, double and triple pendulum system
 
-```
+```{.python}
 # Read input from keyboard
 try:
     n=int(input('\n'))
@@ -61,7 +61,7 @@ except ValueError:
 
 and then, depending on the input number, it enters the appropriate function
 
-```
+```{.python}
 # Enter the appropriate function
 if n == 1:
     simplePendulum(n)
@@ -78,7 +78,41 @@ else:
 
 ### [inputParameters.py](./inputParameters.py)
 
-coming soon...
+The [inputParameters.py](./inputParameters.py) module contains the _inputParameters(n)_ function, which requires as argument the integer _n_ assigned in the _main()_ function and holding the information about the system (1 = simple pendulum, 2 = double pendulum, 3 = triple pendulum). 
+
+Inside the _inputParameters(n)_ function, a temporary parameter array, the initial conditions array and the simulation time constraints array are filled as follows
+
+```{.python}
+# Fill the p array with masses
+for i in range(n):    
+    p[i] = float(input('\nInsert mass for point %1.0f: ' % (i+1)))
+# Fill the p array with lengths
+for j in range(n):
+    p[j+n] = float(input('\nInsert length for rope %1.0f: ' % (j+1)))
+    
+# Fill the q0 array with initial angles
+for k in range(n):
+    q0[2*k] = np.radians(float(input('\nInsert initial angle of point %1.0f (in deg): ' % (k+1))))
+
+# Fill the q0 array with initial velocities
+for l in range(n):
+    q0[2*l + 1] = np.radians(float(input('\nInsert initial angular velocity of point %1.0f (in deg/s): ' % (l+1))))
+
+# Fill the simTime array with the starting time, ending time and the number of iterations to perform
+simTime[0] = int(input("\nInsert starting time: "))
+simTime[1] = int(input("\nInsert ending time: "))
+simTime[2] = int(input('\nInsert number of iterations: '))
+```
+
+Finally, a comprehensive parameter list is created and returned
+
+```{.python}
+# Create the parameters list
+par = [*p, q0, *simTime]
+
+return par
+```
+
 
 ### [equationsMotion.py](./equationsMotion.py)
 
