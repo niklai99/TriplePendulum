@@ -97,7 +97,8 @@ coming soon...
 
 * **STATIC**
 
-    ![simplePendulum_default_static](./Pictures/simplePendulum/simplePendulum_default_static.png)
+    <img src="./Pictures/simplePendulum/simplePendulum_default_static.png" alt="simplePendulum_default_static" width="720">
+
 
 * **ANIMATED**
   
