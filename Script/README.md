@@ -389,7 +389,7 @@ The [animationModule.py](./animationModule.py) module contains the animation fun
     simply animate the generalized coordinates and velocities trends over time. They all share the same structure, thus the third one is taken as an example.
 
     ```python
-        def triplePendulumTrend(i, s, t, q, lines):
+    def triplePendulumTrend(i, s, t, q, lines):
         '''Animate coordinate trends over time for a triple pendulum'''
 
         # Unpack the lines to plot
@@ -430,50 +430,50 @@ The [animationModule.py](./animationModule.py) module contains the animation fun
 
     ```python
     def triplePendulumAnimation(i, x, y, traces, masses, segments, texts, T, h):
-    '''Animate the triple pendulum'''
+        '''Animate the triple pendulum'''
 
-    # Set the points position over each iteration
-    massX0 = [0]
-    massY0 = [0]
-    massX1 = [x[i, 0]]
-    massY1 = [y[i, 0]]
-    massX2 = [x[i, 1]]
-    massY2 = [y[i, 1]]
-    massX3 = [x[i, 2]]
-    massY3 = [y[i, 2]]
+        # Set the points position over each iteration
+        massX0 = [0]
+        massY0 = [0]
+        massX1 = [x[i, 0]]
+        massY1 = [y[i, 0]]
+        massX2 = [x[i, 1]]
+        massY2 = [y[i, 1]]
+        massX3 = [x[i, 2]]
+        massY3 = [y[i, 2]]
 
-    # Set the segment position over each iteration
-    segmentX = [0, x[i, 0], x[i, 1], x[i, 2]]
-    segmentY = [0, y[i, 0], y[i, 1], y[i, 2]]
+        # Set the segment position over each iteration
+        segmentX = [0, x[i, 0], x[i, 1], x[i, 2]]
+        segmentY = [0, y[i, 0], y[i, 1], y[i, 2]]
 
-    # Unpack the trajecotry traces
-    trace1, trace2, trace3 = traces
+        # Unpack the trajecotry traces
+        trace1, trace2, trace3 = traces
 
-    # Plot the trajectory trace data over each iteration
-    trace1.set_data(x[i-25:i, 0], y[i-25:i, 0])
-    trace2.set_data(x[i-40:i, 1], y[i-40:i, 1])
-    trace3.set_data(x[i-65:i, 2], y[i-65:i, 2])
+        # Plot the trajectory trace data over each iteration
+        trace1.set_data(x[i-25:i, 0], y[i-25:i, 0])
+        trace2.set_data(x[i-40:i, 1], y[i-40:i, 1])
+        trace3.set_data(x[i-65:i, 2], y[i-65:i, 2])
 
-    # Unpack mass points
-    mass0, mass1, mass2, mass3 = masses
-    # Plot point positions
-    mass0.set_data(massX0, massY0)
-    mass1.set_data(massX1, massY1)
-    mass2.set_data(massX2, massY2)
-    mass3.set_data(massX3, massY3)
+        # Unpack mass points
+        mass0, mass1, mass2, mass3 = masses
+        # Plot point positions
+        mass0.set_data(massX0, massY0)
+        mass1.set_data(massX1, massY1)
+        mass2.set_data(massX2, massY2)
+        mass3.set_data(massX3, massY3)
 
-    # Plot segments position
-    segments.set_data(segmentX, segmentY)
+        # Plot segments position
+        segments.set_data(segmentX, segmentY)
 
-    # Unpack texts
-    time_template, time_text, totalEnergy_template, totalEnergy_text = texts
+        # Unpack texts
+        time_template, time_text, totalEnergy_template, totalEnergy_text = texts
 
-    # Plot time text
-    time_text.set_text(time_template % (i*h))
-    # Plot total energy text
-    totalEnergy_text.set_text(totalEnergy_template % (T[i]))
+        # Plot time text
+        time_text.set_text(time_template % (i*h))
+        # Plot total energy text
+        totalEnergy_text.set_text(totalEnergy_template % (T[i]))
 
-    return trace1, trace2, trace3, mass0, mass1, mass2, mass3, segments, time_text, totalEnergy_text,
+        return trace1, trace2, trace3, mass0, mass1, mass2, mass3, segments, time_text, totalEnergy_text,
     ```
 
     The function requires nine parameters passed as arguments:
@@ -495,18 +495,18 @@ The [animationModule.py](./animationModule.py) module contains the animation fun
     def kineticEnergyAnimation(i, ax, E, U):
     '''Animate the kinetic energy bar'''
 
-    # Fill the bar with the kinetic energy
-    rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'red')
+        # Fill the bar with the kinetic energy
+        rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'red')
 
-    return rect1,
+        return rect1,
 
     def potentialEnergyAnimation(i, ax, E, U):
     '''Animate the potential energy bar'''
 
-    # Fill the bar with the potential energy
-    rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'blue')
+        # Fill the bar with the potential energy
+        rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'blue')
 
-    return rect2,
+        return rect2,
     ```
 
     They both requires the same parameters, which are indeed the iteration parameter _i_, the axes containing the bar to be updated each interation and the kinetic and potential energy arrays.
