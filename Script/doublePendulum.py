@@ -24,6 +24,7 @@ from computeEnergy import doublePendulumEnergy
 from figureSetup import staticFigure, animatedFigure, addLegend
 from computeCoordinates import computeCoordinates
 from animationModule import doublePendulumTrend, kineticEnergyAnimation, potentialEnergyAnimation, doublePendulumAnimation
+from saveFigure import saveStaticFig
 
 
 def doublePendulum(n):
@@ -105,6 +106,13 @@ def doublePendulum(n):
 
         # Add a legend to the figures using the addLegend() function in the figureSetup.py module
         addLegend(n, ax1, ax2, ax3)
+
+        # Save figure
+        print('\nDo you want to save the figure?\n')
+        save = str(input('[y/n]\n'))
+
+        if save == 'y':
+            saveStaticFig(n, fig)
 
     # If the user chose to display animated plots:
     elif mode == 1:

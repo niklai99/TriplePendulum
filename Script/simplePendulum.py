@@ -24,6 +24,8 @@ from computeEnergy import simplePendulumEnergy
 from figureSetup import staticFigure, animatedFigure, addLegend
 from computeCoordinates import computeCoordinates
 from animationModule import simplePendulumTrend, kineticEnergyAnimation, potentialEnergyAnimation, simplePendulumAnimation
+from saveFigure import saveStaticFig
+
 
 
 def simplePendulum(n):
@@ -98,6 +100,14 @@ def simplePendulum(n):
         # Add a legend to the figures using the addLegend() function in the figureSetup.py module
         addLegend(n, ax1, ax2, ax3)
 
+        # Save figure
+        print('\nDo you want to save the figure?\n')
+        save = str(input('[y/n]\n'))
+
+        if save == 'y':
+            saveStaticFig(n, fig)
+
+
     # If the user chose to display animated plots:
     elif mode == 1:
 
@@ -148,6 +158,7 @@ def simplePendulum(n):
         anim3 = animation.FuncAnimation(fig, potentialEnergyAnimation, frames=len(t), fargs=[ax5, E, U], interval=h, blit=True)
         anim4 = animation.FuncAnimation(fig, simplePendulumTrend, frames=len(t), fargs=['theta', t, q, thetaTrace], interval=h, blit=True)
         anim5 = animation.FuncAnimation(fig, simplePendulumTrend, frames=len(t), fargs=['omega', t, q, omegaTrace], interval=h, blit=True)
+
 
 
     plt.show()
