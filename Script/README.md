@@ -266,10 +266,11 @@ def simplePendulumEnergy(q, par):
 
 ### [figureSetup.py](./figureSetup.py)
 
-The [figureSetup.py](./figureSetup.py) module contains two functions:
+The [figureSetup.py](./figureSetup.py) module contains three functions:
 
 1. _staticFigure(n, q, par)_
 2. _animatedFigure(n, q, par)_
+3. _addLegend(n, ax1, ax2, ax3)_
 
 *   The _staticFigure(n, q, par)_ deals with the settings for the static plots. 
 
@@ -365,10 +366,152 @@ The [figureSetup.py](./figureSetup.py) module contains two functions:
     ax5.axes.xaxis.set_ticks([])
     ax5.axes.yaxis.set_ticks([])
     ```
-    
+
+*   The _addLegend(n, ax1, ax2, ax3)_ function simply adds the plot legend to each plot.
+
+    ```python
+    ax1.legend(loc = 'upper right', ncol = n)
+    ax2.legend(loc = 'upper right', ncol = n)
+    ax3.legend(loc = 'upper right', ncol = n)
+    ```
+
+
 ### [animationModule.py](./animationModule.py)
 
-coming soon...
+The [animationModule.py](./animationModule.py) module contains the animation functions, used to achieve moving pendulums and coordinate trends.  
+
+1.  The first three functions,
+
+    *  _simplePendulumTrend()_
+    *  _doublePendulumTrend()_
+    *  _triplePendulumTrend()_
+
+    simply animate the generalized coordinates and velocities trends over time. They all share the same structure, thus the third one is taken as an example.
+
+    ```python
+        def triplePendulumTrend(i, s, t, q, lines):
+        '''Animate coordinate trends over time for a triple pendulum'''
+
+        # Unpack the lines to plot
+        line1, line2, line3 = lines
+
+        # If the line refers to the angle
+        if s == 'theta':  
+            # Set new data for each iteration
+            line1.set_data(t[:i], q[:i, 0])
+            line2.set_data(t[:i], q[:i, 2])
+            line3.set_data(t[:i], q[:i, 4])
+
+        # If the line refers to the velocity
+        elif s == 'omega':
+            # Set new data for each iteration
+            line1.set_data(t[:i], q[:i, 1])
+            line2.set_data(t[:i], q[:i, 3])
+            line3.set_data(t[:i], q[:i, 5])
+
+        return line1, line2, line3,
+    ```
+
+    The function requires five parameters passed as arguments:
+
+    *   The parameter _i_ refers to the iteration necessary to animate objects
+    *   The parameter _s_ is a string that may be either 'theta' or 'omega', specifying whether the trend refers to the coordinates or the velocities
+    *   The parameter _t_ is the time serie to be plotted on the x-axis
+    *   The parameter _q_ holds the generalized coordinates and velocities
+    *   The parameter _lines_ holds the lineplot's lines to be updated with new data each iteration
+
+2.  The next three functions,
+
+    *   _simplePendulumAnimation(i, x, y, traces, masses, segments, texts, T, h)_
+    *   _doublePendulumAnimation(i, x, y, traces, masses, segments, texts, T, h)_
+    *   _triplePendulumAnimation(i, x, y, traces, masses, segments, texts, T, h)_
+
+    animate the pendulum itself and plot trajectory traces relative to each mass point of the pendulum. They all share the same structure, thus the third one is taken as an example.
+
+    ```python
+    def triplePendulumAnimation(i, x, y, traces, masses, segments, texts, T, h):
+    '''Animate the triple pendulum'''
+
+    # Set the points position over each iteration
+    massX0 = [0]
+    massY0 = [0]
+    massX1 = [x[i, 0]]
+    massY1 = [y[i, 0]]
+    massX2 = [x[i, 1]]
+    massY2 = [y[i, 1]]
+    massX3 = [x[i, 2]]
+    massY3 = [y[i, 2]]
+
+    # Set the segment position over each iteration
+    segmentX = [0, x[i, 0], x[i, 1], x[i, 2]]
+    segmentY = [0, y[i, 0], y[i, 1], y[i, 2]]
+
+    # Unpack the trajecotry traces
+    trace1, trace2, trace3 = traces
+
+    # Plot the trajectory trace data over each iteration
+    trace1.set_data(x[i-25:i, 0], y[i-25:i, 0])
+    trace2.set_data(x[i-40:i, 1], y[i-40:i, 1])
+    trace3.set_data(x[i-65:i, 2], y[i-65:i, 2])
+
+    # Unpack mass points
+    mass0, mass1, mass2, mass3 = masses
+    # Plot point positions
+    mass0.set_data(massX0, massY0)
+    mass1.set_data(massX1, massY1)
+    mass2.set_data(massX2, massY2)
+    mass3.set_data(massX3, massY3)
+
+    # Plot segments position
+    segments.set_data(segmentX, segmentY)
+
+    # Unpack texts
+    time_template, time_text, totalEnergy_template, totalEnergy_text = texts
+
+    # Plot time text
+    time_text.set_text(time_template % (i*h))
+    # Plot total energy text
+    totalEnergy_text.set_text(totalEnergy_template % (T[i]))
+
+    return trace1, trace2, trace3, mass0, mass1, mass2, mass3, segments, time_text, totalEnergy_text,
+    ```
+
+    The function requires nine parameters passed as arguments:
+
+     *   The parameter _i_ refers to the iteration necessary to animate objects
+     *   The parameters _x_ and _y_ are the cartesian coordinates of the pendulum trajectory
+     *   The parameter _traces_ is the list of lineplot's lines to be updated with new data each iteration
+     *   The parameter _masses_ is the list of points, referring to the masses position, to be updated with new data each iteration
+     *   The parameter _segments_ is the list of segments position connecting two mass points to be updated with new data each iteration
+     *   The parameter _texts_ is the list containing text templates and text objects to be updated each iteration
+     *   The parameter _T_ refers to the total energy of the system
+     *   The parameter _h_ is the time step of the time serie
+
+    With the use of this function, several objects are updated each iteration and thus animated! The result is an animated pendulum with trajectory traces attached to each mass point, which are constantly connected by a rigid segment. The passage of time is also made clear by updating the time text. Finally the total energy of the system is also updated and shown as a text object right below the time text. Since energy is conserved in such systems, the energy text object should not change over time. Though, if the dynamic of the system is very intricate due to unfavorable parameters choice, the total energy might change over time. In this case, the user should consider using a finer time grid, achieved by increasing the number of iterations while keeping the time limits constant. 
+
+3. The last two functions animate the kinetic and potential energy bar as follows
+
+    ```python
+    def kineticEnergyAnimation(i, ax, E, U):
+    '''Animate the kinetic energy bar'''
+
+    # Fill the bar with the kinetic energy
+    rect1 = ax.fill_between(x = (0, 1), y1 = 0, y2 = E[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'red')
+
+    return rect1,
+
+    def potentialEnergyAnimation(i, ax, E, U):
+    '''Animate the potential energy bar'''
+
+    # Fill the bar with the potential energy
+    rect2 = ax.fill_between(x = (0, 1), y1 = 0, y2 = U[i] / (np.abs(np.amax(E))+np.abs(np.amax(U))), color = 'blue')
+
+    return rect2,
+    ```
+
+    They both requires the same parameters, which are indeed the iteration parameter _i_, the axes containing the bar to be updated each interation and the kinetic and potential energy arrays.
+
+
 
 ### [simplePendulum.py](./simplePendulum.py)
 
