@@ -86,6 +86,7 @@ Inside the _inputParameters(n)_ function, a temporary parameter array, the initi
 # Fill the p array with masses
 for i in range(n):    
     p[i] = float(input('\nInsert mass for point %1.0f: ' % (i+1)))
+
 # Fill the p array with lengths
 for j in range(n):
     p[j+n] = float(input('\nInsert length for rope %1.0f: ' % (j+1)))
@@ -208,6 +209,7 @@ This function is used to compute cartesian _(x, y)_ coordinates from the general
 if n == 1:
     x[0] = +par[n] * np.sin(q[:,0])
     y[0] = -par[n] * np.cos(q[:,0])
+    
 # If the system is the double pendulum
 elif n == 2:
     x[0] = +par[n] * np.sin(q[:,0])
