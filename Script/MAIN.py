@@ -11,11 +11,6 @@
     The following code lets the user choose whether to go through a simple, double or triple pendulum simulation
 """
 
-# python modules
-import numpy as np 
-import matplotlib.pyplot as plt 
-from matplotlib import animation
-
 # custom made modules
 from simplePendulum import simplePendulum
 from doublePendulum import doublePendulum

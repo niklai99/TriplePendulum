@@ -16,4 +16,4 @@ In the [Lagrange's Method](./LagrangesMethod/) folder you can find a notebook wi
 
 More details in the [Lagrange's Method](./LagrangesMethod/) folder!
 
-Click [HERE](https://nbviewer.jupyter.org/github/niklai99/TriplePendulum/blob/master/LagrangesMethod/TriplePendulum_Notebook.ipynb) to visualize the Notebook with animations!
+Click [HERE](https://nbviewer.jupyter.org/github/niklai99/TriplePendulum/blob/master/LagrangesEquations/TriplePendulum_Notebook.ipynb) to visualize the Notebook with animations!
