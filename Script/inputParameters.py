@@ -33,7 +33,7 @@ def inputParameters(n):
     # Fill the p array with lengths
     for j in range(n):
         p[j+n] = float(input('\nInsert length for rope %1.0f: ' % (j+1)))
-    
+
     # Fill the q0 array with initial angles
     for k in range(n):
         q0[2*k] = np.radians(float(input('\nInsert initial angle of point %1.0f (in deg): ' % (k+1))))
@@ -47,7 +47,4 @@ def inputParameters(n):
     simTime[1] = int(input("\nInsert ending time: "))
     simTime[2] = int(input('\nInsert number of iterations: '))
 
-    # Create the parameters list
-    par = [*p, q0, *simTime]
-
-    return par
+    return [*p, q0, *simTime]
